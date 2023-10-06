@@ -1,32 +1,31 @@
 import './App.css'
 import Home from './Pages/Home'
-import Header from './Components/Header'
-import Footer from './Components/Footer'
-import { GoogleLogin } from '@react-oauth/google'
-import jwt_decode from 'jwt-decode'
+import Leagues from './Pages/Leagues'
+
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import Root from './Root'
+import useScript from './hooks/useScript.js'
+
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Root />}>
+      <Route index element={<Home />} />
+      <Route path="leagues" element={<Leagues />} />
+    </Route>
+  )
+)
 
 function App() {
-  
+  useScript('https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js')
+
   return (
-    <>
-      <div className='flex flex-col h-screen justify-between'>
-        <Header />
-        <h1 className='text-3xl font-bold underline'>
-          Welcome to RaceComp!
-          <Home />
-          <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              const decodedCredentialResponse = jwt_decode(credentialResponse.credential)
-              console.log(decodedCredentialResponse)
-              
-            }}
-            onFailure={(e) => {console.log("Login Failure:\n" + e)}}
-            cookiePolicy={'single_host_origin'}
-          />
-        </h1>
-        <Footer />
-      </div>
-    </>
+      <RouterProvider router={router} />
   )
 }
 
