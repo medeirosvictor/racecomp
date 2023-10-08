@@ -4,7 +4,7 @@ import { FaRegIdCard } from 'react-icons/fa6'
 import { BiMessageSquareDetail, BiBell } from 'react-icons/bi'
 import { IconContext } from 'react-icons';
 import logo from '../assets/images/formula-flag.png'
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 
 function Header() {
@@ -41,6 +41,7 @@ function Header() {
           </button>
           <div id="dropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
               <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                <NavLink to='/profile'>Profile</NavLink>
                 <li>
                   Profile
                 </li>
