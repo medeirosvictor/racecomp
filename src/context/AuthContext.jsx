@@ -12,9 +12,12 @@ const AuthContext = createContext()
 export const AuthContextProvider = ({children}) => {
     const [user, setUser] = useState({});
 
-    const googleSignIn = () => {
+    const googleSignIn = async () => {
         const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider)
+        provider.setCustomParameters({
+            prompt: "select_account"
+        });
+        await signInWithPopup(auth, provider)
     }
 
     const logOut = () => {

@@ -45,8 +45,8 @@ export default function Profile() {
 
     return (
         <>
-            <div className='min-h-full border border-gray p-3'>
-                <div className='flex items-center justify-center space-x-5'>
+            <div className='flex flex-col min-h-full border border-gray p-10 max-w-7xl m-auto space-y-10'>
+                <div className='flex items-center justify-start space-x-7 '>
                     <div className='flex items-center justify-center'>
                         <img className='rounded-md' src={user?.photoURL?.replace('=s96-c', '')} width={300} alt={`${user?.displayName} profile picture`}/>
                     </div>
@@ -68,9 +68,15 @@ export default function Profile() {
                         <div>
                             Email: {user?.email}
                         </div>
+                        <div>
+                            Platforms: 
+                        </div>
+                        <div>
+                            Leagues: 
+                        </div>
                     </div>
                 </div>
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400' type='button' onClick={handleSignOut}>Log Out</button>
+                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400 max-w-lg m-auto' type='button' onClick={handleSignOut}>Log Out</button>
             </div>
         </>
     )

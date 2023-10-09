@@ -4,21 +4,46 @@ import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserAuth } from '../context/AuthContext';
+import { setDoc, getDoc, doc , collection, getFirestore } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
 
 function Login() {
-    const { googleSignIn, user, logOut } = UserAuth()
-    const navigate = useNavigate()
-
     useEffect(() => {
         if (user) {
             navigate('/')
         }
     }, [])
 
+    const { googleSignIn, user, logOut } = UserAuth()
+    const navigate = useNavigate()
+    const db = getFirestore()
+
+    // const createNewUser = async() => {
+        
+        // await addDoc(collectionRef, payload);
+    // };
+
     const handleGoogleLogin = async () => {
       try {
         await googleSignIn();
-        navigate('/')
+        onAuthStateChanged(auth, async (user) => {
+            const docRef = doc(db, 'Users', user?.uid);
+            const docSnap = await getDoc(docRef);
+            if(docSnap.exists()) {
+                console.log("exists");
+            } else {
+                console.log(user)
+                const payload = {
+                    displayName: user?.displayName,
+                    email: user?.email,
+                    photoUrl: user?.photoURL?.replace('=s96-c', ''),
+                    memberSince: user?.metadata.creationTime,
+                    uid: user?.uid
+                };
+                setDoc(doc(collection(db, "Users"), user?.uid), payload)
+            }
+        })
       } catch (e) {
         console.log(e);
       }
