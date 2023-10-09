@@ -13,6 +13,7 @@ import useScript from './hooks/useScript.js'
 import { AuthContextProvider } from './context/AuthContext';
 import Profile from './Pages/Profile';
 import ProtectedRoute from './Components/ProtectedRoute';
+import Login from './Pages/Login.jsx';
 
 
 const router = createBrowserRouter(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<Root />}>
       <Route index element={<Home />} />
       <Route path="leagues" element={<Leagues />} />
+      <Route path="login" element={<Login />} />
       <Route path="profile" element={ <ProtectedRoute><Profile /></ProtectedRoute>} />
     </Route>
   )

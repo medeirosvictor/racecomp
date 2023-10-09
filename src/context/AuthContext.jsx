@@ -5,9 +5,7 @@ import { GoogleAuthProvider,
     signInWithPopup,
     onAuthStateChanged 
 } from "firebase/auth";
-
 import { auth } from '../firebase';
-import { storage, ref, uploadBytes } from "firebase/storage";
 
 const AuthContext = createContext()
 
@@ -44,11 +42,3 @@ export const AuthContextProvider = ({children}) => {
 export const UserAuth = () => {
     return useContext(AuthContext)
 }
-
-export async function uploadProfilePicture(file, currentUser, setLoading) {
-    const fileRef = ref(storage, currentUser.uid + '.jpg');
-    setLoading(true)
-    const snapshot = await uploadBytes(fileRef, file)
-    setLoading(false)
-}
-
