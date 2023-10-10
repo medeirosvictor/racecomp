@@ -1,5 +1,4 @@
-import React from 'react'
-import { UserAuth } from '../context/AuthContext'
+import { UserAuth } from '../context/AuthContext';
 import Card from '../Components/Card';
 
 function Home() {
@@ -9,7 +8,7 @@ function Home() {
     <div>
         <div className='flex text-3xl font-bold underline justify-center'>
             <span className='mr-1'>
-              {user ? `${user?.displayName}, `: "Hi, " } welcome to 
+              {user ? `${user?.displayName}, `: "" } welcome to 
             </span>
             <h1 className='text-3xl'>
               RaceComp

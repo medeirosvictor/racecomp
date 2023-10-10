@@ -1,17 +1,16 @@
-import React from 'react'
-import { HiMagnifyingGlass } from 'react-icons/hi2'
-import { FaRegIdCard } from 'react-icons/fa6'
-import { BiMessageSquareDetail, BiBell } from 'react-icons/bi'
-import { AiOutlinePlusSquare } from 'react-icons/ai'
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { FaRegIdCard } from 'react-icons/fa6';
+import { BiBell } from 'react-icons/bi';
+import { AiOutlinePlusSquare } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import logo from '../assets/images/formula-flag.png'
-import { Link, NavLink, useNavigate  } from 'react-router-dom';
+import { NavLink, useNavigate  } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
 
 function Header() {
     const iconStyles = { size: "1.7em", className: "text-gray-500 hover:text-gray-700 m-1 align-middle" };
-    const { user } = UserAuth()
-    const navigate = useNavigate ()
+    const { user } = UserAuth();    
+    const navigate = useNavigate ();
 
   return (
     <>
@@ -40,13 +39,13 @@ function Header() {
                     <AiOutlinePlusSquare/>
                     </IconContext.Provider>
                 </div>
-                <button className='mx-3 cursor-pointer' id="dropdownDefaultButton" data-dropdown-toggle="dropdown">
+                <button className='mx-3 cursor-pointer' id="headerProfileDropdownButton" data-dropdown-toggle="headerProfileDropdown">
                     <IconContext.Provider value={iconStyles}>
-                    <FaRegIdCard/>
+                      <FaRegIdCard/>
                     </IconContext.Provider>
                 </button>
-                <div id="dropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 p-2">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                <div id="headerProfileDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 p-2">
+                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="headerProfileDropdownButton">
                         <li>
                             <NavLink to='/profile'>Profile</NavLink>
                         </li>

@@ -10,7 +10,6 @@
     "preview": "bunx --bun vite preview"
   },
   "dependencies": {
-    "@react-oauth/google": "^0.11.1",
     "firebase": "^10.4.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
@@ -21,7 +20,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-router-dom": "^6.16.0",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
