@@ -6,14 +6,16 @@ import { IconContext } from 'react-icons';
 import logo from '../assets/images/formula-flag.png'
 import { NavLink, useNavigate  } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
+import { translation } from '../constants/translation/en';
 
-function Header() {
+
+
+const Header = () => {
     const iconStyles = { size: "1.7em", className: "text-gray-500 hover:text-gray-700 m-1 align-middle" };
     const { user } = UserAuth();    
     const navigate = useNavigate ();
 
   return (
-    <>
       <header>
         <nav className='flex items-center mx-auto space-around p-2'>
             <div className='cursor-pointer' onClick={() => navigate('/')}>
@@ -47,23 +49,22 @@ function Header() {
                 <div id="headerProfileDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 p-2">
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="headerProfileDropdownButton">
                         <li>
-                            <NavLink to='/profile'>Profile</NavLink>
+                            <NavLink to='/profile'>{translation.PROFILE}</NavLink>
                         </li>
                         <li>
-                            <NavLink to='/leagues'>Leagues</NavLink>
+                            <NavLink to='/leagues'>{translation.LEAGUES}</NavLink>
                         </li>
                     </ul>
                 </div>
             </>
             :
             <div>
-                <NavLink to='/login'> Login </NavLink>
+                <NavLink to='/login'> {translation.LOGIN} </NavLink>
             </div>
         }
           
         </nav>
       </header>
-    </>
   )
 }
 
