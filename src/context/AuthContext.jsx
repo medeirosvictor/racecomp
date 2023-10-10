@@ -35,7 +35,6 @@ export const AuthContextProvider = ({children}) => {
         await signInWithPopup(auth, provider)
         const userFromFireStore = await getUserFromFirestore(auth.currentUser)
         console.log("googleSignIn: ", userFromFireStore)
-        debugger
         addLoggedUserToLocalStorage(getUserFromFirestore(auth.currentUser))
     }
 

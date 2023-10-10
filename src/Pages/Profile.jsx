@@ -15,6 +15,7 @@ export async function uploadProfilePicture(file, currentUser, setLoading) {
 
 export default function Profile() {
     const { user, logOut } = UserAuth();
+    const [ userChanges, setUserChanges ] = useState({});
     const [newPhoto, setNewPhoto] = useState(null);
     const [editingProfile, setEditingProfile] = useState(false);
     const [loading, setLoading] = useState();
@@ -41,7 +42,6 @@ export default function Profile() {
 
     const handleCancelEditProfile = () => {
         setEditingProfile(false);
-        console.log('cancel editing profile');
     }
 
     const handleSaveEditProfile = () => {
@@ -82,25 +82,13 @@ export default function Profile() {
                             
                         }
                         <div className='user-name'>
-                            Nome: {user?.displayName}
+                            <span className='font-bold text-md'> Nome:</span> {user?.displayName}
                         </div>
                         <div>
-                            Email: {user?.email}
+                            <span className='font-bold text-md'> Email:</span> {user?.email}
                         </div>
                         <div>
-                            Platforms: {user?.platforms ? 
-                                user?.platforms?.map((platform) => {
-                                    return (
-                                        <div key={platform}>
-                                            {platform}
-                                        </div>
-                                    )
-                                })
-                                : 
-                                "N/A"}
-                        </div>
-                        <div>
-                            Leagues: {user?.leagues ? 
+                            <span className='font-bold text-md'> Leagues:</span> {user?.leagues ? 
                                 user?.leagues?.map((league) => {
                                     return (
                                         <div key={league}>
@@ -108,36 +96,96 @@ export default function Profile() {
                                         </div>
                                     )
                                 }):
-                                "N/A" }
+                                "Not registered in any leagues." }
                         </div>
                         <div>
-                            Equipments: {user?.equipments?.map((equipment) => {
-                                return (
-                                    <div key={equipment}>
-                                        {equipment}
+                            <span className='font-bold text-md'>Platforms: </span> 
+                            {
+                                editingProfile ? 
+                                <div className='flex space-x-5'>
+                                    <div className='flex space-x-2'>
+                                        <input type='checkbox' name='platforms' value='PC' id='PC'/>
+                                        <label htmlFor='PC'>PC</label>
                                     </div>
-                                )
-                            })}
+                                    <div className='flex space-x-2'>
+                                        <input type='checkbox' name='platforms' value='PS4' id='PS4'/>
+                                        <label htmlFor='PS4'>PS4</label>
+                                    </div>
+                                    <div className='flex space-x-2'>
+                                        <input type='checkbox' name='platforms' value='XBOX' id='XBOX'/>
+                                        <label htmlFor='XBOX'>XBOX</label>
+                                    </div>
+                                </div>
+                                :     
+                                user?.platforms ? 
+                                    user?.platforms?.map((platform) => {
+                                        return (
+                                            <div key={platform}>
+                                                {platform}
+                                            </div>
+                                        )
+                                    })
+                                    : 
+                                    "N/A"
+                            }
+                            
                         </div>
                         <div>
-                            Country: {user?.country}
+                            <span className='font-bold text-md'>Equipments: </span>
+                                {
+                                    editingProfile ? 
+                                    <div className='flex space-x-5'>
+                                        <div className='flex space-x-2'>
+                                            <input type='checkbox' name='equipments' value='mouseKeyboard' id='mouseKeyboard'/>
+                                            <label htmlFor='mouseKeyboard'>Mouse / Keyboard</label>
+                                        </div>
+                                        <div className='flex space-x-2'>
+                                            <input type='checkbox' name='equipments' value='Controller' id='Controller'/>
+                                            <label htmlFor='Controller'>Controller</label>
+                                        </div>
+                                        <div className='flex space-x-2'>
+                                            <input type='checkbox' name='equipments' value='SteeringWheel' id='SteeringWheel'/>
+                                            <label htmlFor='SteeringWheel'>Steering Wheel</label>
+                                        </div>
+                                    </div>
+                                    :
+                                    user?.equipments ? 
+                                    user?.equipments?.map((equipment) => {
+                                        return (
+                                            <div key={equipment}>
+                                                {equipment}
+                                            </div>
+                                        )
+                                    }) : "N/A"
+                                }
+                            
                         </div>
                         <div>
-                            State: {user?.state} / City: {user?.city}
+                            <span className='font-bold text-md'> Country:</span> {editingProfile ? 
+                                <input type="text" name="country" id="countryEditInput" />
+                            :
+                                user?.country || "N/A"
+                            }
                         </div>
                         <div>
-                            Age: 
+                            <span className='font-bold text-md'> Age:</span> 
                             {editingProfile ? 
-                                <input type="date" name="birthday" id="birthdayEditInput" />
+                                <input type="date" name="birthday" id="birthdayEditInput" onChange={(e) => setUserChanges({...userChanges, age: e.target.value})} />
                             :
                                 user?.age || "N/A"
                             }
                         </div>                       
                     </div>
                 </div>
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleSaveEditProfile}>Save changes</button>
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleCancelEditProfile}>Cancel</button>
+                {
+                    editingProfile ? 
+                    <>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleSaveEditProfile}>Save changes</button>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleCancelEditProfile}>Cancel</button>
+                    </> :
+                    <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
+                }
+                
                 <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400 max-w-lg m-auto' type='button' onClick={handleSignOut}>Log Out</button>
             </div>
         </>
