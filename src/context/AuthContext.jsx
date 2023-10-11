@@ -73,7 +73,7 @@ export const AuthContextProvider = ({children}) => {
             email: user?.email || "",
             photoUrl: user?.photoURL?.replace('=s96-c', '') || "",
             memberSince: user?.metadata.creationTime || Date(),
-            uid: user?.uid || uuidv4()
+            uid: user?.uid
         };
         await setDoc(doc(collection(db, "Users"), user?.uid), payload);
         console.log("handleAddUserToFirestore: ", auth.currentUser)
