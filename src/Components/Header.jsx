@@ -38,7 +38,7 @@ const Header = () => {
                     </button>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
-                            Notifications
+                            {translation.NOTIFICATIONS}
                         </li>
                     </ul>
                 </div>
@@ -51,7 +51,7 @@ const Header = () => {
                     </button>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
-                            Create league?
+                        <NavLink to='/leagues'>{translation.CREATE_LEAGUE}</NavLink>
                         </li>
                     </ul>
                 </div>

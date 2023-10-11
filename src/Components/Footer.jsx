@@ -1,7 +1,9 @@
+import React from 'react'
 import { translation } from '../constants/translation/en'
 
-const  Footer = () => {
+function Footer() {
   return (
+    <>
         <footer>
             <nav className='footer flex w-full place-content-around text-sm py-2'>
                 <div>
@@ -15,6 +17,7 @@ const  Footer = () => {
                 </div>
             </nav>
         </footer>
+    </>
   )
 }
 
