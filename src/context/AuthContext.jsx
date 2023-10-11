@@ -43,9 +43,13 @@ export const AuthContextProvider = ({children}) => {
             prompt: "select_account"
         });
         await signInWithPopup(auth, provider)
-        const userFromFireStore = await getUserFromFirestore(auth.currentUser)
-        await handleAddUserToFirestore (auth.currentUser)
-        console.log("googleSignIn: ", userFromFireStore);
+        if (!isUserOnFirestore(auth.currentUser)) {
+            await handleAddUserToFirestore(auth.currentUser)
+        } else {
+            const userFromFireStore = await getUserFromFirestore(auth.currentUser)
+            addLoggedUserToLocalStorage(userFromFireStore);
+            console.log("googleSignIn: ", userFromFireStore);
+        }
     }
 
 
@@ -74,11 +78,23 @@ export const AuthContextProvider = ({children}) => {
             email: user?.email || "",
             photoUrl: user?.photoURL?.replace('=s96-c', '') || "",
             memberSince: user?.metadata.creationTime || Date(),
+            platforms: [],
+            equipments: [],
+            games: [],
             uid: user?.uid
         };
         await setDoc(doc(collection(db, "Users"), user?.uid), payload);
-        console.log("handleAddUserToFirestore: ", auth.currentUser)
+        console.log("handleAddUserToFirestore: ", auth.currentUser);
         addLoggedUserToLocalStorage(payload);
+    }
+
+    const getLoggedUserFromLocalStorage = () => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        if(user) {
+            return user
+        } else {
+            return null
+        }
     }
 
     const isUserOnFirestore = async (user) => {
@@ -108,7 +124,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, user }}>
+        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, getLoggedUserFromLocalStorage, user }}>
             {children}
         </AuthContext.Provider>
     )

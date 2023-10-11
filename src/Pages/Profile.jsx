@@ -3,6 +3,7 @@ import { UserAuth } from '../context/AuthContext';
 import { getStorage } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import pilotDefaultProfilePic from '../assets/images/pilot-profile-img.png';
+import { updateUserProfileFirestore } from '../firebase';
 
 const storage = getStorage();
 // Storage
@@ -14,8 +15,12 @@ export async function uploadProfilePicture(file, currentUser, setLoading) {
 }
 
 export default function Profile() {
-    const { user, logOut } = UserAuth();
-    const [ userChanges, setUserChanges ] = useState({});
+    const { user, logOut, getLoggedUserFromLocalStorage } = UserAuth();
+    const currentUser = getLoggedUserFromLocalStorage()
+    const [ userChanges, setUserChanges ] = useState({
+        equipments: [],
+        platforms: []
+    });
     const [newPhoto, setNewPhoto] = useState(null);
     const [editingProfile, setEditingProfile] = useState(false);
     const [loading, setLoading] = useState();
@@ -44,9 +49,18 @@ export default function Profile() {
         setEditingProfile(false);
     }
 
-    const handleSaveEditProfile = () => {
+    const updateUserLocalStorage = () => {
+        let user = getLoggedUserFromLocalStorage()
+        user = {...user, ...userChanges}
+        localStorage.setItem('user', JSON.stringify(user));
+    }
+
+    const handleSaveEditProfile = async () => {
         //send update to firestore
         console.log('save editing profile');
+        debugger;
+        await updateUserProfileFirestore(user, userChanges);
+        updateUserLocalStorage()
         setEditingProfile(false);
     }
 
@@ -56,7 +70,36 @@ export default function Profile() {
         } catch (e) {
           console.log(e);
         }
-      }
+    }
+
+    const handlePlatformCheckboxInputChange = (e) => {
+        const { value, checked } = e.target;
+        const platform = checked ? value : null;
+        if(!userChanges.platforms.includes(value)) {
+            setUserChanges({
+                ...userChanges, platforms: [
+                    ...userChanges.platforms,
+                    platform
+                ]
+            })
+
+        }
+        console.log(userChanges)
+    }
+
+    const handleEquipmentCheckboxInputChange = (e) => {
+        const { value, checked } = e.target;
+        const equipment = checked ? value : null;
+        if(!userChanges.equipments.includes(value)) {
+            setUserChanges({
+                ...userChanges, equipments: [
+                    ...userChanges.equipments,
+                    equipment
+                ]
+            })
+        }
+        console.log(userChanges)
+    }
     
     const handleCancelUpload = () => {
         setChangingProfilePicture(false);
@@ -104,21 +147,22 @@ export default function Profile() {
                                 editingProfile ? 
                                 <div className='flex space-x-5'>
                                     <div className='flex space-x-2'>
-                                        <input type='checkbox' name='platforms' value='PC' id='PC'/>
+                                        <input defaultChecked={currentUser?.platforms.includes('PC') ? 'checked' : ''} type='checkbox' name='PC' value='PC' id='PC' onChange={handlePlatformCheckboxInputChange}/>
                                         <label htmlFor='PC'>PC</label>
                                     </div>
                                     <div className='flex space-x-2'>
-                                        <input type='checkbox' name='platforms' value='PS4' id='PS4'/>
-                                        <label htmlFor='PS4'>PS4</label>
+                                        <input defaultChecked={currentUser?.platforms.includes('Playstation') ? 'checked' : ''} type='checkbox' name='Playstation' value='Playstation' id='Playstation' onChange={handlePlatformCheckboxInputChange}/>
+                                        <label htmlFor='Playstation'>Playstation</label>
                                     </div>
                                     <div className='flex space-x-2'>
-                                        <input type='checkbox' name='platforms' value='XBOX' id='XBOX'/>
+                                        <input defaultChecked={currentUser?.platforms.includes('XBOX') ? 'checked' : ''} type='checkbox' name='XBOX' value='XBOX' id='XBOX' onChange={handlePlatformCheckboxInputChange}/>
                                         <label htmlFor='XBOX'>XBOX</label>
                                     </div>
                                 </div>
                                 :     
-                                user?.platforms ? 
-                                    user?.platforms?.map((platform) => {
+                                currentUser?.platforms.length > 0 ? 
+                                    currentUser?.platforms?.map((platform) => {
+                                        console.log('platform: ', platform)
                                         return (
                                             <div key={platform}>
                                                 {platform}
@@ -136,21 +180,21 @@ export default function Profile() {
                                     editingProfile ? 
                                     <div className='flex space-x-5'>
                                         <div className='flex space-x-2'>
-                                            <input type='checkbox' name='equipments' value='mouseKeyboard' id='mouseKeyboard'/>
+                                            <input defaultChecked={currentUser?.equipments.includes('mouseKeyboard') ? 'checked' : ''}  type='checkbox' name='equipments' value='mouseKeyboard' id='mouseKeyboard' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='mouseKeyboard'>Mouse / Keyboard</label>
                                         </div>
                                         <div className='flex space-x-2'>
-                                            <input type='checkbox' name='equipments' value='Controller' id='Controller'/>
+                                            <input defaultChecked={currentUser?.equipments.includes('Controller') ? 'checked' : ''} type='checkbox' name='equipments' value='Controller' id='Controller' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='Controller'>Controller</label>
                                         </div>
                                         <div className='flex space-x-2'>
-                                            <input type='checkbox' name='equipments' value='SteeringWheel' id='SteeringWheel'/>
+                                            <input defaultChecked={currentUser?.equipments.includes('SteeringWheel') ? 'checked' : ''} type='checkbox' name='equipments' value='SteeringWheel' id='SteeringWheel' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='SteeringWheel'>Steering Wheel</label>
                                         </div>
                                     </div>
                                     :
-                                    user?.equipments ? 
-                                    user?.equipments?.map((equipment) => {
+                                    currentUser?.equipments.length > 0 ? 
+                                    currentUser?.equipments?.map((equipment) => {
                                         return (
                                             <div key={equipment}>
                                                 {equipment}
