@@ -12,7 +12,7 @@ import { translation } from '../constants/translation/en';
 
 const Header = () => {
     const iconStyles = { size: "1.7em", className: "text-gray-500 hover:text-gray-700 m-1 align-middle" };
-    const { user } = UserAuth();    
+    const { user } = UserAuth();
     const navigate = useNavigate ();
 
   return (
@@ -30,24 +30,39 @@ const Header = () => {
         {
             user ? 
             <>
-                
-                <div className='mx-3 cursor-pointer'>
-                    <IconContext.Provider value={iconStyles}>
-                    <BiBell />
-                    </IconContext.Provider>
+                <div className="dropdown dropdown-end mx-3 cursor-pointer">
+                    <button tabIndex={0}>
+                        <IconContext.Provider value={iconStyles}>
+                            <BiBell />
+                        </IconContext.Provider>
+                    </button>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li>
+                            Notifications
+                        </li>
+                    </ul>
                 </div>
-                <div className='mx-3 cursor-pointer'>
-                    <IconContext.Provider value={iconStyles}>
-                    <AiOutlinePlusSquare/>
-                    </IconContext.Provider>
+
+                <div className="dropdown dropdown-end mx-3 cursor-pointer">
+                    <button tabIndex={0}>
+                        <IconContext.Provider value={iconStyles}>
+                            <AiOutlinePlusSquare/>
+                        </IconContext.Provider>
+                    </button>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li>
+                            Create league?
+                        </li>
+                    </ul>
                 </div>
-                <button className='mx-3 cursor-pointer' id="headerProfileDropdownButton" data-dropdown-toggle="headerProfileDropdown">
-                    <IconContext.Provider value={iconStyles}>
-                      <FaRegIdCard/>
-                    </IconContext.Provider>
-                </button>
-                <div id="headerProfileDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 p-2">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="headerProfileDropdownButton">
+
+                <div className="dropdown dropdown-end mx-3 cursor-pointer">
+                    <button tabIndex={0}>
+                        <IconContext.Provider value={iconStyles}>
+                            <FaRegIdCard/>
+                        </IconContext.Provider>
+                    </button>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
                             <NavLink to='/profile'>{translation.PROFILE}</NavLink>
                         </li>

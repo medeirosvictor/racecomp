@@ -14,7 +14,7 @@ function Login() {
 
     const handleGoogleLogin = async () => {
       try {
-        await googleSignIn();        
+        await googleSignIn();
         navigate('/');
       } catch (e) {
         console.log(e);
