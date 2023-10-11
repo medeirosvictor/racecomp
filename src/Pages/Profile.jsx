@@ -16,10 +16,11 @@ export async function uploadProfilePicture(file, currentUser, setLoading) {
 
 export default function Profile() {
     const { user, logOut, getLoggedUserFromLocalStorage } = UserAuth();
-    const currentUser = getLoggedUserFromLocalStorage()
+    const currentUser = getLoggedUserFromLocalStorage();
+    const {equipments, platforms} = currentUser;
     const [ userChanges, setUserChanges ] = useState({
-        equipments: [],
-        platforms: []
+        equipments,
+        platforms
     });
     const [newPhoto, setNewPhoto] = useState(null);
     const [editingProfile, setEditingProfile] = useState(false);
@@ -56,35 +57,21 @@ export default function Profile() {
     }
 
     const handleSaveEditProfile = async () => {
-        //send update to firestore
-        console.log('save editing profile');
-        debugger;
         await updateUserProfileFirestore(user, userChanges);
-        updateUserLocalStorage()
+        updateUserLocalStorage();
+        setUserChanges([]);
         setEditingProfile(false);
     }
 
-    const handleSignOut = () => {
-        try {
-          logOut();
-        } catch (e) {
-          console.log(e);
-        }
-    }
-
     const handlePlatformCheckboxInputChange = (e) => {
-        const { value, checked } = e.target;
-        const platform = checked ? value : null;
-        if(!userChanges.platforms.includes(value)) {
+        const { name, value, checked } = e.target;
+        if(checked && userChanges?.platforms && !userChanges.platforms.includes(value)) {
             setUserChanges({
-                ...userChanges, platforms: [
-                    ...userChanges.platforms,
-                    platform
-                ]
-            })
-
+                ...userChanges,
+                platforms: [...userChanges.platforms, value]}, console.log("callback: ", userChanges))
+        } else {
+            setUserChanges({...userChanges, platforms: userChanges.platforms.filter(platform => platform !== value)}, console.log(userChanges))
         }
-        console.log(userChanges)
     }
 
     const handleEquipmentCheckboxInputChange = (e) => {
@@ -143,20 +130,20 @@ export default function Profile() {
                         </div>
                         <div>
                             <span className='font-bold text-md'>Platforms: </span> 
-                            {
+                                {
                                 editingProfile ? 
                                 <div className='flex space-x-5'>
                                     <div className='flex space-x-2'>
-                                        <input defaultChecked={currentUser?.platforms.includes('PC') ? 'checked' : ''} type='checkbox' name='PC' value='PC' id='PC' onChange={handlePlatformCheckboxInputChange}/>
+                                        <input defaultChecked={currentUser?.platforms?.includes("PC") ? 'checked' : ''} type='checkbox' name='PC' value='PC' id='PC' onChange={handlePlatformCheckboxInputChange}/>
                                         <label htmlFor='PC'>PC</label>
                                     </div>
                                     <div className='flex space-x-2'>
-                                        <input defaultChecked={currentUser?.platforms.includes('Playstation') ? 'checked' : ''} type='checkbox' name='Playstation' value='Playstation' id='Playstation' onChange={handlePlatformCheckboxInputChange}/>
+                                        <input defaultChecked={currentUser?.platforms?.includes("Playstation") ? 'checked' : ''} type='checkbox' name='Playstation' value='Playstation' id='Playstation' onChange={handlePlatformCheckboxInputChange}/>
                                         <label htmlFor='Playstation'>Playstation</label>
                                     </div>
                                     <div className='flex space-x-2'>
-                                        <input defaultChecked={currentUser?.platforms.includes('XBOX') ? 'checked' : ''} type='checkbox' name='XBOX' value='XBOX' id='XBOX' onChange={handlePlatformCheckboxInputChange}/>
-                                        <label htmlFor='XBOX'>XBOX</label>
+                                        <input defaultChecked={currentUser?.platforms?.includes("Xbox") ? 'checked' : ''} type='checkbox' name='Xbox' value='Xbox' id='Xbox' onChange={handlePlatformCheckboxInputChange}/>
+                                        <label htmlFor='Xbox'>Xbox</label>
                                     </div>
                                 </div>
                                 :     
@@ -174,21 +161,21 @@ export default function Profile() {
                             }
                             
                         </div>
-                        <div>
+                        {/* <div>
                             <span className='font-bold text-md'>Equipments: </span>
                                 {
                                     editingProfile ? 
                                     <div className='flex space-x-5'>
                                         <div className='flex space-x-2'>
-                                            <input defaultChecked={currentUser?.equipments.includes('mouseKeyboard') ? 'checked' : ''}  type='checkbox' name='equipments' value='mouseKeyboard' id='mouseKeyboard' onChange={handleEquipmentCheckboxInputChange}/>
+                                            <input defaultChecked={currentUser?.equipments?.includes('mouseKeyboard') ? 'checked' : ''}  type='checkbox' name='equipments' value='mouseKeyboard' id='mouseKeyboard' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='mouseKeyboard'>Mouse / Keyboard</label>
                                         </div>
                                         <div className='flex space-x-2'>
-                                            <input defaultChecked={currentUser?.equipments.includes('Controller') ? 'checked' : ''} type='checkbox' name='equipments' value='Controller' id='Controller' onChange={handleEquipmentCheckboxInputChange}/>
+                                            <input defaultChecked={currentUser?.equipments?.includes('Controller') ? 'checked' : ''} type='checkbox' name='equipments' value='Controller' id='Controller' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='Controller'>Controller</label>
                                         </div>
                                         <div className='flex space-x-2'>
-                                            <input defaultChecked={currentUser?.equipments.includes('SteeringWheel') ? 'checked' : ''} type='checkbox' name='equipments' value='SteeringWheel' id='SteeringWheel' onChange={handleEquipmentCheckboxInputChange}/>
+                                            <input defaultChecked={currentUser?.equipments?.includes('SteeringWheel') ? 'checked' : ''} type='checkbox' name='equipments' value='SteeringWheel' id='SteeringWheel' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='SteeringWheel'>Steering Wheel</label>
                                         </div>
                                     </div>
@@ -203,7 +190,7 @@ export default function Profile() {
                                     }) : "N/A"
                                 }
                             
-                        </div>
+                        </div> */}
                         <div>
                             <span className='font-bold text-md'> Country:</span> {editingProfile ? 
                                 <input type="text" name="country" id="countryEditInput" />
@@ -230,7 +217,7 @@ export default function Profile() {
                     <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
                 }
                 
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400 max-w-lg m-auto' type='button' onClick={handleSignOut}>Log Out</button>
+                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400 max-w-lg m-auto' type='button' onClick={logOut}>Log Out</button>
             </div>
         </>
     )

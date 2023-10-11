@@ -67,9 +67,13 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const logOut = async () => {
-        await signOut(auth);
-        localStorage.removeItem('user');
-        setUser(null);
+        try {
+            await signOut(auth);
+            localStorage.removeItem('user');
+            setUser(null);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleAddUserToFirestore = async (user) => {
