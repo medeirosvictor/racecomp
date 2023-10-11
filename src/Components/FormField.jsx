@@ -1,9 +1,9 @@
 
-const FormField = ({ label, value, onChange }) => {
+const FormField = ({ label,placeholder, value, onChange }) => {
     
   return (
     <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={label}>
+        <label className=" font-bold m-2 text-xl block text-gray-700 " htmlFor={label}>
             {label}:
         </label>
         <input
@@ -11,6 +11,7 @@ const FormField = ({ label, value, onChange }) => {
             type="text"
             id={label}
             value={value}
+            placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
         />
     </div>
