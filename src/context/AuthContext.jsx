@@ -15,29 +15,13 @@ const AuthContext = createContext()
 
 export const AuthContextProvider = ({children}) => {
     const [user, setUser] = useState(null);
-
+    
     const db = getFirestore()
-
+    
     const addLoggedUserToLocalStorage = (user) => {
         localStorage.setItem('user', JSON.stringify(user))
     }
     
-    /**
-    * googleSignIn
-    * 
-    * @description Signs in a user with Google authentication
-    */
-    const googleSignIn = async () => {
-        const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({
-            prompt: "select_account"
-        });
-        await signInWithPopup(auth, provider)
-        const userFromFireStore = await getUserFromFirestore(auth.currentUser)
-        console.log("googleSignIn: ", userFromFireStore)
-        addLoggedUserToLocalStorage(getUserFromFirestore(auth.currentUser))
-    }
-
     const getUserFromFirestore = async (user) => {
         const docRef = doc(db, 'Users', user?.uid);
         const docSnap = await getDoc(docRef);
@@ -47,6 +31,23 @@ export const AuthContextProvider = ({children}) => {
             return null
         }
     }
+    
+    /**
+     * googleSignIn
+     * 
+     * @description Signs in a user with Google authentication
+    */
+    const googleSignIn = async () => {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: "select_account"
+        });
+        await signInWithPopup(auth, provider)
+        const userFromFireStore = await getUserFromFirestore(auth.currentUser)
+        await handleAddUserToFirestore (auth.currentUser)
+        console.log("googleSignIn: ", userFromFireStore);
+    }
+
 
     const emailAndPasswordSignIn = async (email, password) => {
         await signInWithEmailAndPassword(auth, email, password);
@@ -73,7 +74,7 @@ export const AuthContextProvider = ({children}) => {
             email: user?.email || "",
             photoUrl: user?.photoURL?.replace('=s96-c', '') || "",
             memberSince: user?.metadata.creationTime || Date(),
-            uid: user?.uid || uuidv4()
+            uid: user?.uid
         };
         await setDoc(doc(collection(db, "Users"), user?.uid), payload);
         console.log("handleAddUserToFirestore: ", auth.currentUser)
