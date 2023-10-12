@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 const initialState = {
     title:"",
     startDate:"",
-    selectedUsers:[]
+    selectedPlatforms:[]
   }
 
 const useLeaguesPage =()=>{
@@ -24,28 +24,27 @@ const useLeaguesPage =()=>{
           }))
         },[])
       
-        const handleSetSelectedUsers = useCallback((userId) => {
+        const handleSetSelectedPlatforms = useCallback((platformId) => {
           setLeagueData((prev) => {
-            if (prev.selectedUsers.includes(userId)) {
+            if (prev.selectedPlatforms.includes(platformId)) {
               return {
                 ...prev,
-                selectedUsers: prev.selectedUsers.filter(id => id !== userId),
+                selectedPlatforms: prev.selectedPlatforms.filter(id => id !== platformId),
               }
             } else {
               return {
                 ...prev,
-                selectedUsers:[...prev.selectedUsers, userId],
+                selectedPlatforms:[...prev.selectedPlatforms, platformId],
               };
             }
           });
         }, []);
 
         return {
-
             leagueData,
             handleSetTitleValue,
             handleSetLeagueStart,
-            handleSetSelectedUsers
+            handleSetSelectedPlatforms
         }
 }
 

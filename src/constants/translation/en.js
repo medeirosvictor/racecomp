@@ -22,4 +22,7 @@ export const translation ={
         TERMS_OF_USE:"Terms of Use",
         UPCOMING_RACES:'Upcoming Races',
         WELCOME_TO: 'welcome to ',
+        PC:"PC",
+        PLAYSTATION:"playstation",
+        XBOX:"xbox"
 }
