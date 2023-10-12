@@ -5,7 +5,7 @@ import { FaRegIdCard } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import { translation } from '../constants/translation/en';
 
-export const User = ({ iconStyles }) => {
+export const UserMenu = ({ iconStyles }) => {
     return (
         <>
             <div className="dropdown dropdown-end mx-3 cursor-pointer">
@@ -62,4 +62,4 @@ export const User = ({ iconStyles }) => {
     );
 };
 
-export default User;
+export default UserMenu;
