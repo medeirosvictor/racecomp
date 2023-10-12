@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/formula-flag.png';
 import { translation } from '../constants/translation/en';
 import { UserAuth } from '../context/AuthContext';
-import User from './User';
+import UserMenu from './UserMenu';
 
 const Header = () => {
     const iconStyles = {
@@ -31,7 +31,7 @@ const Header = () => {
                     />
                 </div>
                 {user ? (
-                    <User iconStyles />
+                    <UserMenu iconStyles />
                 ) : (
                     <div>
                         <NavLink to="/login"> {translation.LOGIN} </NavLink>
