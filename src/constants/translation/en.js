@@ -1,6 +1,7 @@
 export const translation ={
         CREATE_LEAGUE:"Create league?",
         CANCEL:"cancel",
+        CLOSE:"close",
         COPYRIGHT :"Copyright",
         LEAGUES:"Leagues",
         LEAGUE_FORM_TITLE:"League Form",
@@ -14,8 +15,9 @@ export const translation ={
         SUBMIT:"Submit",
         SELECT_PARTICIPANTS:"select participants for this league",
         SELECT_AN_USER:"Select an user",
+        SELECT_USERS:"Select users",
         SELECTED_USERS:"Selected Users:",
-        START_DATE:"League start date",
+        PLATFORM:"League will be played on",
         RACECOMP :'RaceComp',
         TERMS_OF_USE:"Terms of Use",
         UPCOMING_RACES:'Upcoming Races',
