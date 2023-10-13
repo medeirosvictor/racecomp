@@ -26,6 +26,7 @@ export const AuthContextProvider = ({children}) => {
         const docRef = doc(db, 'Users', user?.uid);
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()) {
+            
             return docSnap.data()
         } else {
             return null
@@ -42,10 +43,15 @@ export const AuthContextProvider = ({children}) => {
         provider.setCustomParameters({
             prompt: "select_account"
         });
-        await signInWithPopup(auth, provider)
-        const userFromFireStore = await getUserFromFirestore(auth.currentUser)
-        await handleAddUserToFirestore (auth.currentUser)
-        console.log("googleSignIn: ", userFromFireStore);
+        await signInWithPopup(auth, provider);
+        const isExistingUser = await isUserOnFirestore(auth.currentUser)
+        if (!isExistingUser) {
+            await handleAddUserToFirestore(auth.currentUser);
+        } else {
+            const userFromFireStore = await getUserFromFirestore(auth.currentUser)
+            addLoggedUserToLocalStorage(userFromFireStore);
+            console.log("googleSignIn: ", userFromFireStore);
+        }
     }
 
 
@@ -63,22 +69,40 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const logOut = async () => {
-        await signOut(auth);
-        localStorage.removeItem('user');
-        setUser(null);
+        try {
+            await signOut(auth);
+            localStorage.removeItem('user');
+            setUser(null);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleAddUserToFirestore = async (user) => {
         const payload = {
             displayName: user?.displayName || "",
             email: user?.email || "",
-            photoUrl: user?.photoURL?.replace('=s96-c', '') || "",
+            photoURL: user?.photoURL?.replace('=s96-c', '') || "",
             memberSince: user?.metadata.creationTime || Date(),
+            platforms: [],
+            equipments: [],
+            games: [],
+            birthday: '',
+            country: '',
             uid: user?.uid
         };
         await setDoc(doc(collection(db, "Users"), user?.uid), payload);
-        console.log("handleAddUserToFirestore: ", auth.currentUser)
+        console.log("handleAddUserToFirestore: ", auth.currentUser);
         addLoggedUserToLocalStorage(payload);
+    }
+
+    const getLoggedUserFromLocalStorage = () => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        if(user) {
+            return user
+        } else {
+            return null
+        }
     }
 
     const isUserOnFirestore = async (user) => {
@@ -108,7 +132,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, user }}>
+        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, getLoggedUserFromLocalStorage, user }}>
             {children}
         </AuthContext.Provider>
     )

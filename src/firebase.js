@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, updateProfile } from 'firebase/auth';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { doc, getFirestore, updateDoc } from "@firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,5 +24,15 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const db = getFirestore();
+
+export const updateUserProfileFirestore = async (user, data) => {
+    debugger
+    try {
+        await updateDoc(doc(db, "Users", user.uid), data);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const auth = getAuth(app);
