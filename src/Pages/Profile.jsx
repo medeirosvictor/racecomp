@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { UserAuth } from '../context/AuthContext';
 import { getDownloadURL, getStorage } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
-import pilotDefaultProfilePic from '../assets/images/pilot-profile-img.png';
 import { updateUserProfileFirestore } from '../firebase';
 import { ref, uploadBytes } from 'firebase/storage';
+import { CountryDropdown } from 'react-country-region-selector';
 
 const storage = getStorage();
 // Storage
@@ -26,10 +25,6 @@ export default function Profile() {
 
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [loading, setLoading] = useState();
-
-    const triggerChangeProfilePicture = () => {
-        setChangingProfilePicture(true);
-    }
 
     const uploadProfilePicture = async (file, currentUser) => {
         const fileRef = ref(storage, `profile${currentUser.uid}pic.${fileType}`);
@@ -94,11 +89,13 @@ export default function Profile() {
     }
 
     const handleEditFormInputChange = (e) => {
-        const { name, value, checked } = e.target;
-        if (name === 'country') {
-            setUserChanges({ ...userChanges, country: value })
-        } else if (name === 'birthday') {
-            setUserChanges({ ...userChanges, birthday: value })
+        if (e.target) {
+            const { name, value, checked } = e.target;
+            if (name === 'birthday') {
+                setUserChanges({ ...userChanges, birthday: value })
+            }
+        } else {
+            setUserChanges({ ...userChanges, country: e })
         }
     }
 
@@ -108,8 +105,8 @@ export default function Profile() {
 
     return (
         <>
-            <div className='flex flex-col min-h-full p-10 max-w-7xl m-auto space-y-10'>
-                <div className='flex items-center justify-start space-x-7'>
+            <div className='flex flex-col min-h-full p-5 max-w-7xl m-auto space-y-10'>
+                <div className='flex flex-col items-center justify-start lg:space-x-7 space-y-7 lg:flex-row lg:justify-center'>
                     <div className='flex flex-col items-center justify-center space-y-7'>
                         <img className='rounded-md' src={currentProfilePic.replace('=s96-c', '')} width={300} alt={`${currentUser?.displayName} profile picture`}/>
                         {
@@ -122,7 +119,7 @@ export default function Profile() {
                             ''
                         }
                     </div>
-                    <div className='flex flex-col space-y-3'>
+                    <div className='flex flex-col space-y-3 lg:min-w-[450]'>
                         
                         <div className='user-name'>
                             <span className='font-bold text-md'> Nome:</span> {currentUser?.displayName}
@@ -206,7 +203,12 @@ export default function Profile() {
                         </div>
                         <div>
                             <span className='font-bold text-md'> Country:</span> {isEditingProfile ? 
-                                <input className='border' type="text" name="country" id="countryEditInput" onChange={handleEditFormInputChange} value={currentUser?.country || ""} />
+                                // <input className='border' type="text" name="country" id="countryEditInput" onChange={handleEditFormInputChange} value={currentUser?.country || ""} />
+                                <CountryDropdown
+                                    className='border'
+                                    value={userChanges.country}
+                                    onChange={handleEditFormInputChange}
+                                    priorityOptions={["BR", "CA"]} />
                             :
                                 currentUser?.country || "N/A"
                             }

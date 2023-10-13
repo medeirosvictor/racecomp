@@ -20,6 +20,7 @@ export const translation = {
     PLATFORM: 'League will be played on',
     RACECOMP: 'RaceComp',
     TERMS_OF_USE: 'Terms of Use',
+    TERMS_OF_SERVICE: 'Terms of Service',
     UPCOMING_RACES: 'Upcoming Races',
     WELCOME_TO: 'welcome to ',
     PC: 'PC',
@@ -27,4 +28,6 @@ export const translation = {
     XBOX: 'xbox',
     GOOGLE_LOGIN: 'Google Login',
     REGISTER: 'Register',
+    ABOUT_US: 'About us',
+    CONTACT_US: 'Contact us',
 };

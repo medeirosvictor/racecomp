@@ -30,7 +30,15 @@ function Home() {
                 </div>
             </div>
             <div>
-                <h2 className='text-2xl underline my-4'>{translation.LIVE}</h2>
+                <div className='flex space-x-2 items-center'>
+                    <h2 className='text-2xl underline my-4 '>
+                        {translation.LIVE} 
+                    </h2>
+                    <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-700 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-700"></span>
+                    </span>
+                </div>
                 <div>
                     <Card />
                 </div>
