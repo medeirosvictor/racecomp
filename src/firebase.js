@@ -27,6 +27,7 @@ const analytics = getAnalytics(app);
 const db = getFirestore();
 
 export const updateUserProfileFirestore = async (user, data) => {
+    debugger
     try {
         await updateDoc(doc(db, "Users", user.uid), data);
     } catch (error) {

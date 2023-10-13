@@ -26,6 +26,7 @@ export const AuthContextProvider = ({children}) => {
         const docRef = doc(db, 'Users', user?.uid);
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()) {
+            
             return docSnap.data()
         } else {
             return null
@@ -42,9 +43,10 @@ export const AuthContextProvider = ({children}) => {
         provider.setCustomParameters({
             prompt: "select_account"
         });
-        await signInWithPopup(auth, provider)
-        if (!isUserOnFirestore(auth.currentUser)) {
-            await handleAddUserToFirestore(auth.currentUser)
+        await signInWithPopup(auth, provider);
+        const isExistingUser = await isUserOnFirestore(auth.currentUser)
+        if (!isExistingUser) {
+            await handleAddUserToFirestore(auth.currentUser);
         } else {
             const userFromFireStore = await getUserFromFirestore(auth.currentUser)
             addLoggedUserToLocalStorage(userFromFireStore);
@@ -80,11 +82,13 @@ export const AuthContextProvider = ({children}) => {
         const payload = {
             displayName: user?.displayName || "",
             email: user?.email || "",
-            photoUrl: user?.photoURL?.replace('=s96-c', '') || "",
+            photoURL: user?.photoURL?.replace('=s96-c', '') || "",
             memberSince: user?.metadata.creationTime || Date(),
             platforms: [],
             equipments: [],
             games: [],
+            birthday: '',
+            country: '',
             uid: user?.uid
         };
         await setDoc(doc(collection(db, "Users"), user?.uid), payload);
