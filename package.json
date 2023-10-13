@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
-    "build": "bunx --bun vite build",
+    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "bunx --bun vite preview"
+    "preview": "vite preview"
   },
   "dependencies": {
     "firebase": "^10.4.0",
