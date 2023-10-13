@@ -22,3 +22,16 @@ h1 {
     font-size: 3.2em;
     line-height: 1.1;
 }
+
+.slick-prev {
+    left: 10px;
+}
+
+.slick-next {
+    right: 10px;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    color: black;
+}
