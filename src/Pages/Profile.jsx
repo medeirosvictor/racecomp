@@ -60,7 +60,6 @@ export default function Profile() {
             const url = await uploadProfilePicture(newPhoto, currentUser, setLoading);
             setUserChanges({...userChanges, photoURL: url});
         }
-        debugger
         await updateUserProfileFirestore(user, userChanges);
         updateUserLocalStorage();
         setIsEditingProfile(false);
