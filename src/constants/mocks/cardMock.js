@@ -78,20 +78,32 @@ export const cardsObj = {
     lives: [
         {
             id: 0,
-            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/QsyPbSON09c?si=uJGZ6Sy5Mw1nVMCh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-            url: 'https://twitch.tv/gaules',
+            embed: '<iframe src="https://player.twitch.tv/?channel=gaules&parent=www.example.com" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620"></iframe>',
+            url: 'https://www.twitch.tv/gaules',
             type: 'lives',
         },
         {
             id: 1,
-            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/ft18dshHRTc?si=xyBGtFuXf4rpbR2M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-            url: 'https://www.youtube.com/live/ft18dshHRTc?si=3-Xg-JdLiGtHVY9G',
+            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/C5YNrA7_Jig?si=09VyWuiT-4QWAo6m" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+            url: 'https://www.youtube.com/live/C5YNrA7_Jig?si=09VyWuiT-4QWAo6m',
             type: 'lives',
         },
         {
             id: 2,
-            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/K_cm7J8C-DI?si=-3LXhqmR2a8ELLEe" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-            url: 'https://youtu.be/K_cm7J8C-DI?si=-3LXhqmR2a8ELLEe',
+            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/zXVfuVucsdU?si=C9YIOFKKb7ypxBQb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+            url: 'https://youtu.be/zXVfuVucsdU?si=C9YIOFKKb7ypxBQb',
+            type: 'lives',
+        },
+        {
+            id: 3,
+            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/ToqzucrpCh4?si=P1aFStLIGgDOd_VC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+            url: 'https://www.youtube.com/live/ToqzucrpCh4?si=P1aFStLIGgDOd_VC',
+            type: 'lives',
+        },
+        {
+            id: 4,
+            embed: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dam0GPOAvVI?si=xYTwC_cch9eYmE7E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+            url: 'https://youtu.be/dam0GPOAvVI?si=xYTwC_cch9eYmE7E',
             type: 'lives',
         },
     ],

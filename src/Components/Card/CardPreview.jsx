@@ -1,32 +1,42 @@
-import Embed from 'react-embed';
 import ReactPlayer from 'react-player';
 
-const CardPreview = ({ obj }) => {
+const CardPreview = ({ obj, playersAmount }) => {
     const { url } = obj;
 
     const checkItYouTube = str => {
         if (str.includes('youtube') || str.includes('youtu.be')) {
             return true;
-        } else {
-            false;
+        } else if (str.includes('twitch')) {
+            return false;
+        }
+    };
+
+    const getWidth = () => {
+        switch (playersAmount) {
+            case 1:
+                return '50vw';
+            case 2:
+                return '45vw';
+            case 3:
+                return '595px';
+            default:
+                return '455px';
         }
     };
 
     return (
-        <div className="flex flex-col border border-gray p-3 rounded-md max-w-md min-h-[300px] justify-start bg-cover">
-            {checkItYouTube ? (
-                <ReactPlayer
-                    url={url}
-                    config={{
-                        youtube: {
-                            playerVars: { origin: 'https://www.youtube.com' },
-                        },
-                    }}
-                />
-            ) : (
-                <Embed url={url} />
-            )}
-        </div>
+        <ReactPlayer
+            url={url}
+            controls={true}
+            width={getWidth()}
+            config={
+                checkItYouTube && {
+                    youtube: {
+                        playerVars: { origin: 'https://www.youtube.com' },
+                    },
+                }
+            }
+        />
     );
 };
 

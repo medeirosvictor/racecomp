@@ -21,12 +21,27 @@ const Carousel = ({ cards }) => {
         );
     };
 
+    const slidesToShow = () => {
+        switch (cards.length) {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 3;
+            case 4:
+                return 4;
+            default:
+                return 4;
+        }
+    };
+
     const settings = {
         dots: true,
         infinite: cards.length > 4 ? true : false,
         speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: slidesToShow(),
+        slidesToScroll: slidesToShow(),
         initialSlide: 0,
         nextArrow: <SamplePrevArrow />,
         prevArrow: <SamplePrevArrow />,
@@ -65,7 +80,13 @@ const Carousel = ({ cards }) => {
             case 'leagues':
                 return <CardLeague obj={obj} key={obj.id} />;
             case 'lives':
-                return <CardPreview obj={obj} key={obj.id} />;
+                return (
+                    <CardPreview
+                        obj={obj}
+                        playersAmount={cards.length}
+                        key={obj.id}
+                    />
+                );
             default:
                 return 'SOMETHING WENT WRONG....';
         }
