@@ -5,4 +5,4 @@
 - bun install
 - bun run dev
 
-Demo Link (Not Stable): https://race-comp-demo-bltlggrj0-medeirosvictor.vercel.app/
+Demo Link (Not Stable): https://race-comp-demo.vercel.app/
