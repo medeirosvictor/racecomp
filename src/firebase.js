@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, updateProfile } from 'firebase/auth';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
-import { doc, getFirestore, updateDoc } from "@firebase/firestore";
+import { getAuth, updateProfile, deleteUser } from 'firebase/auth';
+import { getStorage, ref, uploadBytes, deleteObject } from 'firebase/storage';
+import { doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,6 +25,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore();
+const storage = getStorage();
 
 export const updateUserProfileFirestore = async (user, data) => {
     try {
@@ -32,6 +33,36 @@ export const updateUserProfileFirestore = async (user, data) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const deleteCurrentUser = (user) => {
+    // removing from firestore
+    deleteDoc(doc(db, "Users", user.uid));
+    const auth = getAuth();
+    const authUser = auth.currentUser;
+
+    // removing profile image from storage
+    if (user.photoURL.includes('firebase')) {
+        const regex = /([^\/?]+)(?=\?)/g;
+        const profilePicFileName = user.photoURL.match(regex)[0].replace('userProfileImages%2F', '');
+        console.log(profilePicFileName);
+        debugger;
+        const profilePic = ref(storage, `userProfileImages/${profilePicFileName}`);
+
+        // Delete the file
+        deleteObject(profilePic).then(() => {
+            console.log("Profile picture deleted");
+        }).catch((error) => {
+            console.log("Error deleting profile picture: ", error)
+        });
+    }
+
+    // removing from Firebase Auth
+    deleteUser(authUser).then(() => {
+        console.log("User deleted");
+    }).catch((error) => {
+        console.log("Deleting user: ", error);
+    });
 }
 
 export const auth = getAuth(app);
