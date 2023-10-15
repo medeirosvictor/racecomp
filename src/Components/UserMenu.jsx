@@ -46,7 +46,7 @@ export const UserMenu = ({ iconStyles }) => {
 
             <div className="dropdown dropdown-end mx-3 cursor-pointer">
                 <button tabIndex={0}>
-                    <img className='rounded-full w-[65px] h-[50px] border-2 border-red-950 hover:border-red-700' src={currentUser.photoURL} alt="Current user profile picture" />
+                    <img className='rounded-full w-[65px] h-[50px] border-2 border-red-950 hover:border-red-700 object-cover' src={currentUser.photoURL} alt="Current user profile picture" />
                     {/* <IconContext.Provider value={iconStyles}>
                         <FaRegIdCard />
                     </IconContext.Provider> */}

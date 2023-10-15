@@ -8,7 +8,7 @@ import { GoogleAuthProvider,
     createUserWithEmailAndPassword,
     updateProfile
 } from "firebase/auth";
-import { auth } from '../firebase';
+import { auth, deleteCurrentUser } from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 
 const AuthContext = createContext()
@@ -20,6 +20,10 @@ export const AuthContextProvider = ({children}) => {
     
     const addLoggedUserToLocalStorage = (user) => {
         localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    const removeUserFromLocalStorage = () => {
+        localStorage.removeItem('user');
     }
     
     const getUserFromFirestore = async (user) => {
@@ -71,7 +75,7 @@ export const AuthContextProvider = ({children}) => {
     const logOut = async () => {
         try {
             await signOut(auth);
-            localStorage.removeItem('user');
+            removeUserFromLocalStorage();
             setUser(null);
         } catch (error) {
             console.log(error);
@@ -115,6 +119,14 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
+    const deleteUserAccount = (user) => {
+        // remove user from localstorage
+        removeUserFromLocalStorage();
+        // remove user
+        deleteCurrentUser(user);
+        // logout? 
+    }
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if(!user) {
@@ -132,7 +144,7 @@ export const AuthContextProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, getLoggedUserFromLocalStorage, user }}>
+        <AuthContext.Provider value={{ handleCreateAccountForm, googleSignIn, emailAndPasswordSignIn, logOut, getLoggedUserFromLocalStorage, deleteUserAccount, user }}>
             {children}
         </AuthContext.Provider>
     )

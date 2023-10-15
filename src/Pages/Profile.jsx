@@ -4,12 +4,13 @@ import { getDownloadURL, getStorage } from 'firebase/storage';
 import { updateUserProfileFirestore } from '../firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { CountryDropdown } from 'react-country-region-selector';
+import { useNavigate } from 'react-router-dom';
 
 const storage = getStorage();
 // Storage
 
 export default function Profile() {
-    const { user, logOut, getLoggedUserFromLocalStorage } = UserAuth();
+    const { user, logOut, getLoggedUserFromLocalStorage, deleteUserAccount } = UserAuth();
     const currentUser = getLoggedUserFromLocalStorage();
     const {equipments, platforms, country, birthday, photoURL} = currentUser;
     const [userChanges, setUserChanges] = useState({
@@ -25,9 +26,10 @@ export default function Profile() {
 
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [loading, setLoading] = useState();
+    const navigate = useNavigate()
 
     const uploadProfilePicture = async (file, currentUser) => {
-        const fileRef = ref(storage, `profile${currentUser.uid}pic.${fileType}`);
+        const fileRef = ref(storage, `userProfileImages/profile${currentUser.uid}pic.${fileType}`);
         await uploadBytes(fileRef, file);
         const url = await getDownloadURL(fileRef);
         return url;
@@ -50,8 +52,8 @@ export default function Profile() {
     }
 
     const updateUserLocalStorage = () => {
-        let user = getLoggedUserFromLocalStorage()
-        user = {...user, ...userChanges}
+        let user = getLoggedUserFromLocalStorage();
+        user = {...user, ...userChanges};
         localStorage.setItem('user', JSON.stringify(user));
     }
 
@@ -70,9 +72,9 @@ export default function Profile() {
         if(checked && userChanges?.platforms && !userChanges.platforms.includes(value)) {
             setUserChanges({
                 ...userChanges,
-                platforms: [...userChanges.platforms, value]})
+                platforms: [...userChanges.platforms, value]});
         } else {
-            setUserChanges({...userChanges, platforms: userChanges.platforms.filter(platform => platform !== value)})
+            setUserChanges({...userChanges, platforms: userChanges.platforms.filter(platform => platform !== value)});
         }
     }
 
@@ -81,7 +83,7 @@ export default function Profile() {
         if(checked && userChanges?.equipments && !userChanges.equipments.includes(value)) {
             setUserChanges({
                 ...userChanges,
-                equipments: [...userChanges.equipments, value]})
+                equipments: [...userChanges.equipments, value]});
         } else {
             setUserChanges({...userChanges, equipments: userChanges.equipments.filter(platform => platform !== value)})
         }
@@ -91,15 +93,17 @@ export default function Profile() {
         if (e.target) {
             const { name, value, checked } = e.target;
             if (name === 'birthday') {
-                setUserChanges({ ...userChanges, birthday: value })
+                setUserChanges({ ...userChanges, birthday: value });
             }
         } else {
-            setUserChanges({ ...userChanges, country: e })
+            setUserChanges({ ...userChanges, country: e });
         }
     }
 
-    const handleCancelUpload = () => {
-        setChangingProfilePicture(false);
+    const deleteAccount = async () => {
+        console.log("deleting account");
+        await deleteUserAccount(currentUser);
+        navigate('/');
     }
 
     return (
@@ -107,21 +111,20 @@ export default function Profile() {
             <div className='flex flex-col min-h-full p-5 max-w-7xl m-auto space-y-10'>
                 <div className='flex flex-col items-center justify-start lg:space-x-7 space-y-7 lg:flex-row lg:justify-center'>
                     <div className='flex flex-col items-center justify-center space-y-7'>
-                        <img className='rounded-md' src={currentProfilePic.replace('=s96-c', '')} width={300} alt={`${currentUser?.displayName} profile picture`}/>
+                        <img className='rounded-md object-cover h-[400px] w-[400px]' src={currentProfilePic.replace('=s96-c', '')} width={400} height={400} alt={`${currentUser?.displayName} profile picture`}/>
                         {
                             isEditingProfile ?
                             <div className='flex flex-col space-y-3'>
-                                <label htmlFor="inputUpdateProfilePic">Upload a new profile picture</label>
+                                <label className='font-bold ' htmlFor="inputUpdateProfilePic">Upload a new profile picture: </label>
                                 <input onChange={handleChangeProfilePicture} type='file' placeholder='Upload new profile picture' name='inputUpdateProfilePic' id='inputUpdateProfilePic'/> 
                             </div>
                             :
                             ''
                         }
                     </div>
-                    <div className='flex flex-col space-y-3 lg:min-w-[450]'>
-                        
+                    <div className='flex flex-col space-y-3 lg:min-w-[500px] min-h-[400px]'> 
                         <div className='user-name'>
-                            <span className='font-bold text-md'> Nome:</span> {currentUser?.displayName}
+                            <span className='font-bold text-md'> Name:</span> {currentUser?.displayName}
                         </div>
                         <div>
                             <span className='font-bold text-md'> Email:</span> {currentUser?.email}
@@ -213,25 +216,30 @@ export default function Profile() {
                             }
                         </div>
                         <div>
-                            <span className='font-bold text-md'> Birthday:</span> 
+                            <span className='font-bold text-md'> Birthday: </span> 
                             {isEditingProfile ? 
-                                <input className='border' type="date" name="birthday" id="birthdayEditInput" onChange={handleEditFormInputChange} value={currentUser?.birthday || ""} />
+                                <input className='border' type="date" name="birthday" id="birthdayEditInput" onChange={handleEditFormInputChange} value={currentUser?.birthday || userChanges.birthday || ''} />
                             :
                                 currentUser?.birthday || "N/A"
                             }
                         </div>
                     </div>
                 </div>
-                {
-                    isEditingProfile ? 
-                    <>
-                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleSaveEditProfile}>Save changes</button>
-                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleCancelEditProfile}>Cancel</button>
-                    </> :
-                    <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
-                }
-                
-                <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-400 max-w-lg m-auto' type='button' onClick={logOut}>Log Out</button>
+                <div className='action-buttons flex flex-col space-x-7 space-y-5 items-center justify-center'>
+                    {
+                        isEditingProfile ? 
+                        <div className='flex space-x-7 items-center justify-center'>
+                            <button  className='border border-gray-300 rounded-md hover:border-green-700 px-5 py-2' type='button' onClick={handleSaveEditProfile}>Save changes</button>
+                            <button  className='border border-gray-300 rounded-md hover:border-red-400 px-5 py-2' type='button' onClick={handleCancelEditProfile}>Cancel</button>
+                        </div> :
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
+                    }
+                    <div className='flex space-x-4 max-w-lg m-auto items-center justify-center'>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-500' type='button' onClick={logOut}>Log Out</button>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-white bg-red-300 hover:bg-red-700' type='button' onClick={deleteAccount}>Delete Account</button>
+                    </div>
+                </div>
+
             </div>
         </>
     )

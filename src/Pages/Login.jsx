@@ -83,7 +83,6 @@ function Login() {
         return (
             <div className="flex flex-col min-h-full border border-gray p-10 max-w-7xl m-auto space-y-10 justify-center items-center">
                 <h2 className="text-2xl underline">
-                    {' '}
                     Welcome {user.displayName}
                 </h2>
                 <button
