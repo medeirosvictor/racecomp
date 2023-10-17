@@ -36,7 +36,7 @@ export const UserMenu = ({ iconStyles }) => {
                     className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                 >
                     <li>
-                        <NavLink to="/leagues">
+                        <NavLink to="/create-league">
                             {translation.CREATE_LEAGUE}
                         </NavLink>
                     </li>

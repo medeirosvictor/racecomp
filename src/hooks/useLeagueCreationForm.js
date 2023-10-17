@@ -2,10 +2,11 @@ import { useCallback, useState } from "react"
 const initialState = {
     title:"",
     startDate:"",
+    game:"",
     selectedPlatforms:[]
   }
 
-const useLeaguesPage =()=>{
+const useLeagueCreationForm =()=>{
       
       const [leagueData,setLeagueData] = useState(initialState)
       
@@ -21,6 +22,13 @@ const useLeaguesPage =()=>{
           setLeagueData(prev =>({
             ...prev,
             startDate:leagueStartDate,
+          }))
+        },[])
+
+        const handleSetLeagueGame = useCallback( gameName => {
+          setLeagueData(prev =>({
+            ...prev,
+            game:gameName,
           }))
         },[])
       
@@ -44,8 +52,9 @@ const useLeaguesPage =()=>{
             leagueData,
             handleSetTitleValue,
             handleSetLeagueStart,
+            handleSetLeagueGame,
             handleSetSelectedPlatforms
         }
 }
 
-export default useLeaguesPage
+export default useLeagueCreationForm

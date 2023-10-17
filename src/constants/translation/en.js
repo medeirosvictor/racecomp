@@ -3,6 +3,7 @@ export const translation = {
     CANCEL: 'cancel',
     CLOSE: 'close',
     COPYRIGHT: 'Copyright',
+    GAME_NAME:"This league will be played on the following game",
     LEAGUES: 'Leagues',
     LEAGUE_FORM_TITLE: 'League Form',
     LEAGUE_FORM_FIELD_TITLE: 'League Title',
