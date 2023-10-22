@@ -24,7 +24,6 @@ export const AuthContextProvider = ({children}) => {
             console.log('logged in: ', userFromFireStore);
         })
         return () => {
-            console.log('logged out?');
             unsubscribe();
         }
     }, [])

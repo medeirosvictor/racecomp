@@ -57,9 +57,9 @@ export const UserMenu = ({ iconStyles }) => {
                 </ul>
             </div>
 
-            <div className="dropdown dropdown-end mx-3 cursor-pointer">
+            <div className="dropdown dropdown-end mx-3 cursor-pointer flex-shrink-0 flex-grow-0">
                 <button tabIndex={0}>
-                    <img className='rounded-full w-[65px] h-[50px] border-2 border-red-950 hover:border-red-700 object-cover' 
+                    <img className='rounded-full w-[60px] h-[60px] border-2 border-red-700 hover:border-red-950 object-cover' 
                     src={user.photoURL || defaultProfilePic} alt="Current user profile picture" />
                 </button>
                 <ul
@@ -67,14 +67,14 @@ export const UserMenu = ({ iconStyles }) => {
                     className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                 >
                     <li>
+                        <NavLink to="/leagues">{translation.MY_LEAGUES}</NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/profile">{translation.PROFILE}</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/leagues">{translation.LEAGUES}</NavLink>
-                    </li>
-                    <li>
                     <button
-                        className="border border-gray-300 rounded-md hover:border-black px-5 py-2"
+                        className="rounded-md text-red-500 px-5 py-2"
                         type="button"
                         onClick={handleSignOut}
                     >

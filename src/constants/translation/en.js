@@ -33,4 +33,5 @@ export const translation = {
     REGISTER: 'Register',
     ABOUT_US: 'About us',
     CONTACT_US: 'Contact us',
+    MY_LEAGUES: 'My Leagues'
 };
