@@ -13,13 +13,13 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import ProtectedRoute from './Components/ProtectedRoute';
-import { AuthContextProvider } from './context/AuthContext';
 import { AboutUs } from './Pages/AboutUs';
 import { ContactUs } from './Pages/ContactUs';
 import Login from './Pages/Login.jsx';
 import { Page404 } from './Pages/Page404';
 import { PrivacyPolicy } from './Pages/PrivacyPolicy';
 import { TermsOfService } from './Pages/TermsOfService';
+import { AuthContextProvider } from './context/AuthContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

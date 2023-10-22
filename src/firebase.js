@@ -2,8 +2,17 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, updateProfile, deleteUser } from 'firebase/auth';
-import { getStorage, ref, uploadBytes, deleteObject } from 'firebase/storage';
-import { doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
+import { getStorage, ref, deleteObject } from 'firebase/storage';
+import { setDoc, getDoc , collection, doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
+import { GoogleAuthProvider,
+    signOut,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { removeUserFromLocalStorage } from "./utils/localStorageHelpers";
+import { state$ } from './utils/legendState'
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,7 +55,6 @@ export const deleteCurrentUser = (user) => {
         const regex = /([^\/?]+)(?=\?)/g;
         const profilePicFileName = user.photoURL.match(regex)[0].replace('userProfileImages%2F', '');
         console.log(profilePicFileName);
-        debugger;
         const profilePic = ref(storage, `userProfileImages/${profilePicFileName}`);
 
         // Delete the file
@@ -63,6 +71,88 @@ export const deleteCurrentUser = (user) => {
     }).catch((error) => {
         console.log("Deleting user: ", error);
     });
+}
+
+export const handleCreateAccountForm = async (displayName, email, password) => {
+    await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(auth.currentUser, {
+        displayName
+    });
+   await handleAddUserToFirestore(auth.currentUser);
+}
+
+export const emailAndPasswordSignIn = async (email, password) => {
+    await signInWithEmailAndPassword(auth, email, password);
+}
+
+export const getUserFromFirestore = async (user, db) => {
+    const docRef = doc(db, 'Users', user?.uid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+        return docSnap.data();
+    } else {
+        return null;
+    }
+}
+
+export const isUserOnFirestore = async (user) => {
+    const docRef = doc(db, 'Users', user?.uid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export const handleAddUserToFirestore = async (user) => {
+    const payload = {
+        displayName: user?.displayName || "",
+        email: user?.email || "",
+        photoURL: user?.photoURL?.replace('=s96-c', '') || "",
+        memberSince: user?.metadata.creationTime || Date(),
+        platforms: [],
+        equipments: [],
+        games: [],
+        birthday: '',
+        country: '',
+        uid: user?.uid
+    };
+    await setDoc(doc(collection(db, "Users"), user?.uid), payload);
+    console.log("handleAddUserToFirestore: ", auth.currentUser);
+    // addLoggedUserToLocalStorage(payload);
+    state$.user.set(payload);
+}
+
+export const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+        prompt: "select_account"
+    });
+    await signInWithPopup(auth, provider);
+    const userExists = await isUserOnFirestore(auth.currentUser)
+    if (!userExists) {
+        await handleAddUserToFirestore(auth.currentUser);
+    } else {
+        const userFromFireStore = await getUserFromFirestore(auth.currentUser, db)
+        // addLoggedUserToLocalStorage(userFromFireStore);
+        console.log("googleSignIn: ", userFromFireStore);
+        state$.user.set(userFromFireStore);
+    }
+}
+
+export const logOut = async () => {
+    try {
+        await signOut(auth);
+        removeUserFromLocalStorage();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteUserAccount = (user) => {
+    removeUserFromLocalStorage();
+    deleteCurrentUser(user);
 }
 
 export const auth = getAuth(app);

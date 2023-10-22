@@ -1,32 +1,25 @@
 import { useState } from 'react';
-import { UserAuth } from '../context/AuthContext';
 import { getDownloadURL, getStorage } from 'firebase/storage';
 import { updateUserProfileFirestore } from '../firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { CountryDropdown } from 'react-country-region-selector';
 import { useNavigate } from 'react-router-dom';
+import { state$, tempState$ } from '../utils/legendState';
+import { logOut, deleteUserAccount } from '../firebase';
+import defaultProfilePic from '../assets/images/pilot-profile-img.png';
 
 const storage = getStorage();
-// Storage
 
 export default function Profile() {
-    const { user, logOut, getLoggedUserFromLocalStorage, deleteUserAccount } = UserAuth();
-    const currentUser = getLoggedUserFromLocalStorage();
-    const {equipments, platforms, country, birthday, photoURL} = currentUser;
-    const [userChanges, setUserChanges] = useState({
-        equipments,
-        platforms,
-        country,
-        birthday,
-        photoURL
-    });
+    const currentUser = state$.user.get();
+    const userChanges = tempState$.userChanges.get();
+    const { photoURL } = currentUser;
     const [newPhoto, setNewPhoto] = useState(photoURL);
     const [currentProfilePic, setCurrentProfilePic] = useState(photoURL);
     const [fileType, setFileType] = useState(null);
-
     const [isEditingProfile, setIsEditingProfile] = useState(false);
-    const [loading, setLoading] = useState();
-    const navigate = useNavigate()
+
+    const navigate = useNavigate();
 
     const uploadProfilePicture = async (file, currentUser) => {
         const fileRef = ref(storage, `userProfileImages/profile${currentUser.uid}pic.${fileType}`);
@@ -44,63 +37,66 @@ export default function Profile() {
 
     const handleEditProfile = () => {
         setIsEditingProfile(true);
-        console.log('editing profile');
     }
 
     const handleCancelEditProfile = () => {
         setIsEditingProfile(false);
     }
 
-    const updateUserLocalStorage = () => {
-        let user = getLoggedUserFromLocalStorage();
-        user = {...user, ...userChanges};
-        localStorage.setItem('user', JSON.stringify(user));
-    }
-
-    const handleSaveEditProfile = async (e) => {
+    const handleSaveEditProfile = async () => {
         if (currentProfilePic !== newPhoto) {
-            const url = await uploadProfilePicture(newPhoto, currentUser, setLoading);
-            setUserChanges({...userChanges, photoURL: url});
+            const url = await uploadProfilePicture(newPhoto, currentUser);
+            tempState$.userChanges.photoURL.set(url);
+            state$.user.photoURL.set(url);
         }
-        await updateUserProfileFirestore(user, userChanges);
-        updateUserLocalStorage();
+        state$.user.set((user) => ({...user, ...userChanges}));
+        await updateUserProfileFirestore(state$.user.get(), userChanges);
         setIsEditingProfile(false);
     }
 
     const handlePlatformCheckboxInputChange = (e) => {
-        const { name, value, checked } = e.target;
-        if(checked && userChanges?.platforms && !userChanges.platforms.includes(value)) {
-            setUserChanges({
-                ...userChanges,
-                platforms: [...userChanges.platforms, value]});
+        const { value, checked } = e.target;
+        const userChangesPlatforms = userChanges.platforms || [];
+        if(checked && userChangesPlatforms && !userChangesPlatforms.includes(value)) {
+            tempState$.userChanges.platforms.set([...userChangesPlatforms, value]);
+           
         } else {
-            setUserChanges({...userChanges, platforms: userChanges.platforms.filter(platform => platform !== value)});
+            tempState$.userChanges.platforms.set(userChanges.platforms.filter(platform => platform !== value))
         }
     }
 
     const handleEquipmentCheckboxInputChange = (e) => {
-        const { name, value, checked } = e.target;
-        if(checked && userChanges?.equipments && !userChanges.equipments.includes(value)) {
-            setUserChanges({
-                ...userChanges,
-                equipments: [...userChanges.equipments, value]});
+        const { value, checked } = e.target;
+        const userChangesEquipments = userChanges.equipments || [];
+        if(checked && userChangesEquipments && !userChangesEquipments.includes(value)) {
+            tempState$.userChanges.equipments.set([...userChangesEquipments, value]);
+           
         } else {
-            setUserChanges({...userChanges, equipments: userChanges.equipments.filter(platform => platform !== value)})
+            tempState$.userChanges.equipments.set(userChanges.equipments.filter(equipment => equipment !== value))
         }
     }
 
     const handleEditFormInputChange = (e) => {
         if (e.target) {
-            const { name, value, checked } = e.target;
+            const { name, value } = e.target;
             if (name === 'birthday') {
-                setUserChanges({ ...userChanges, birthday: value });
+                tempState$.userChanges.birthday.set(value)
             }
         } else {
-            setUserChanges({ ...userChanges, country: e });
+            tempState$.userChanges.country.set(e)
         }
     }
 
-    const deleteAccount = async () => {
+    const handleSignOut = () => {
+        try {
+            logOut();
+            navigate('/');
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
         console.log("deleting account");
         await deleteUserAccount(currentUser);
         navigate('/');
@@ -111,7 +107,7 @@ export default function Profile() {
             <div className='flex flex-col min-h-full p-5 max-w-7xl m-auto space-y-10'>
                 <div className='flex flex-col items-center justify-start lg:space-x-7 space-y-7 lg:flex-row lg:justify-center'>
                     <div className='flex flex-col items-center justify-center space-y-7'>
-                        <img className='rounded-md object-cover h-[400px] w-[400px]' src={currentProfilePic.replace('=s96-c', '')} width={400} height={400} alt={`${currentUser?.displayName} profile picture`}/>
+                        <img className='rounded-md object-cover h-[400px] w-[400px]' src={currentProfilePic.replace('=s96-c', '') || defaultProfilePic} width={400} height={400} alt={`${currentUser?.displayName} profile picture`}/>
                         {
                             isEditingProfile ?
                             <div className='flex flex-col space-y-3'>
@@ -161,7 +157,6 @@ export default function Profile() {
                                 :     
                                 currentUser?.platforms.length > 0 ? 
                                     currentUser?.platforms?.map((platform) => {
-                                        console.log('platform: ', platform)
                                         return (
                                             <div key={platform}>
                                                 {platform}
@@ -179,7 +174,7 @@ export default function Profile() {
                                     isEditingProfile ? 
                                     <div className='flex space-x-5'>
                                         <div className='flex space-x-2'>
-                                            <input defaultChecked={currentUser?.equipments?.includes('mouseKeyboard') ? 'checked' : ''}  type='checkbox' name='Mouse and Keyboard' value='Mouse and Keyboard' id='mouseKeyboard' onChange={handleEquipmentCheckboxInputChange}/>
+                                            <input defaultChecked={currentUser?.equipments?.includes('Mouse and Keyboard') ? 'checked' : ''}  type='checkbox' name='Mouse and Keyboard' value='Mouse and Keyboard' id='mouseKeyboard' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='mouseKeyboard'>Mouse / Keyboard</label>
                                         </div>
                                         <div className='flex space-x-2'>
@@ -187,7 +182,7 @@ export default function Profile() {
                                             <label htmlFor='Controller'>Controller</label>
                                         </div>
                                         <div className='flex space-x-2'>
-                                            <input defaultChecked={currentUser?.equipments?.includes('SteeringWheel') ? 'checked' : ''} type='checkbox' name='Steering Wheel' value='Steering Wheel' id='SteeringWheel' onChange={handleEquipmentCheckboxInputChange}/>
+                                            <input defaultChecked={currentUser?.equipments?.includes('Steering Wheel') ? 'checked' : ''} type='checkbox' name='Steering Wheel' value='Steering Wheel' id='SteeringWheel' onChange={handleEquipmentCheckboxInputChange}/>
                                             <label htmlFor='SteeringWheel'>Steering Wheel</label>
                                         </div>
                                     </div>
@@ -204,8 +199,37 @@ export default function Profile() {
                             
                         </div>
                         <div>
+                            <span className='font-bold text-md'>Games: </span>
+                                {
+                                    isEditingProfile ? 
+                                    <div className='flex space-x-5'>
+                                        <div className='flex space-x-2'>
+                                        <input defaultChecked={currentUser?.games?.includes("F1") ? 'checked' : ''} type='checkbox' name='F1' value='F1' id='F1' onChange={handlePlatformCheckboxInputChange}/>
+                                        <label htmlFor='PC'>F1</label>
+                                    </div>
+                                    <div className='flex space-x-2'>
+                                        <input defaultChecked={currentUser?.games?.includes("Gran Turismo") ? 'checked' : ''} type='checkbox' name='Gran Turismo' value='Gran Turismo' id='Gran Turismo' onChange={handlePlatformCheckboxInputChange}/>
+                                        <label htmlFor='Playstation'>Gran Turismo</label>
+                                    </div>
+                                    <div className='flex space-x-2'>
+                                        <input defaultChecked={currentUser?.games?.includes("iRacing") ? 'checked' : ''} type='checkbox' name='iRacing' value='iRacing' id='iRacing' onChange={handlePlatformCheckboxInputChange}/>
+                                        <label htmlFor='Xbox'>iRacing</label>
+                                    </div>
+                                    </div>
+                                    :
+                                    currentUser?.games.length > 0 ? 
+                                    currentUser?.games?.map((game) => {
+                                        return (
+                                            <div key={game}>
+                                                {game}
+                                            </div>
+                                        )
+                                    }) : "N/A"
+                                }
+                            
+                        </div>
+                        <div>
                             <span className='font-bold text-md'> Country:</span> {isEditingProfile ? 
-                                // <input className='border' type="text" name="country" id="countryEditInput" onChange={handleEditFormInputChange} value={currentUser?.country || ""} />
                                 <CountryDropdown
                                     className='border'
                                     value={userChanges.country}
@@ -235,8 +259,8 @@ export default function Profile() {
                         <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 max-w-lg m-auto' type='button' onClick={handleEditProfile}>Edit Profile</button>
                     }
                     <div className='flex space-x-4 max-w-lg m-auto items-center justify-center'>
-                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-500' type='button' onClick={logOut}>Log Out</button>
-                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-white bg-red-300 hover:bg-red-700' type='button' onClick={deleteAccount}>Delete Account</button>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-red-500' type='button' onClick={handleSignOut}>Log Out</button>
+                        <button  className='border border-gray-300 rounded-md hover:border-black px-5 py-2 text-white bg-red-300 hover:bg-red-700' type='button' onClick={handleDeleteAccount}>Delete Account</button>
                     </div>
                 </div>
 
