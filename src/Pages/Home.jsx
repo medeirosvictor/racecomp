@@ -1,16 +1,15 @@
 import Section from '../Components/Section';
 import { cardsObj } from '../constants/mocks/cardMock';
 import { translation } from '../constants/translation/en';
-import { UserAuth } from '../context/AuthContext';
+import { state$ } from '../utils/legendState';
 
 const Home = () => {
-    const { user } = UserAuth();
-
+    const user = state$.user.get();
     return (
         <div>
             <div className="flex text-3xl font-bold underline justify-center">
                 <span className="mr-1">
-                    {user ? `${user?.displayName}, ` : ''}{' '}
+                    {user?.displayName ? `${user?.displayName}, ` : ''}{' '}
                     {translation.WELCOME_TO}
                 </span>
                 <h1 className="text-3xl">{translation.RACECOMP}</h1>

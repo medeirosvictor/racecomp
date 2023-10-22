@@ -3,17 +3,15 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/formula-flag.png';
 import { translation } from '../constants/translation/en';
-import { UserAuth } from '../context/AuthContext';
 import UserMenu from './UserMenu';
+import { state$ } from '../utils/legendState';
 
 const Header = () => {
     const iconStyles = {
         size: '1.7em',
         className: 'text-gray-500 hover:text-gray-700 m-1 align-middle',
     };
-    const { getLoggedUserFromLocalStorage } = UserAuth();
-    const currentUser = getLoggedUserFromLocalStorage();
-
+    const user = state$.user.get();
     const navigate = useNavigate();
 
     return (
@@ -32,7 +30,7 @@ const Header = () => {
                         placeholder="Search for leagues, pilots and more!"
                     />
                 </div>
-                {currentUser ? (
+                {user?.displayName ? (
                     <UserMenu iconStyles />
                 ) : (
                     <div>

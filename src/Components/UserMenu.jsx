@@ -3,11 +3,25 @@ import { AiOutlinePlusSquare } from 'react-icons/ai';
 import { BiBell } from 'react-icons/bi';
 import { NavLink } from 'react-router-dom';
 import { translation } from '../constants/translation/en';
-import { UserAuth } from '../context/AuthContext';
+import { logOut } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import { state$ } from '../utils/legendState';
+import defaultProfilePic from '../assets/images/pilot-profile-img.png';
+
 
 export const UserMenu = ({ iconStyles }) => {
-    const { getLoggedUserFromLocalStorage } = UserAuth();
-    const currentUser = getLoggedUserFromLocalStorage();
+    const user = state$.user.get();
+
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        try {
+            logOut();
+            navigate('/');
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <>
@@ -45,7 +59,8 @@ export const UserMenu = ({ iconStyles }) => {
 
             <div className="dropdown dropdown-end mx-3 cursor-pointer">
                 <button tabIndex={0}>
-                    <img className='rounded-full w-[65px] h-[50px] border-2 border-red-950 hover:border-red-700 object-cover' src={currentUser.photoURL} alt="Current user profile picture" />
+                    <img className='rounded-full w-[65px] h-[50px] border-2 border-red-950 hover:border-red-700 object-cover' 
+                    src={user.photoURL || defaultProfilePic} alt="Current user profile picture" />
                 </button>
                 <ul
                     tabIndex={0}
@@ -56,6 +71,15 @@ export const UserMenu = ({ iconStyles }) => {
                     </li>
                     <li>
                         <NavLink to="/leagues">{translation.LEAGUES}</NavLink>
+                    </li>
+                    <li>
+                    <button
+                        className="border border-gray-300 rounded-md hover:border-black px-5 py-2"
+                        type="button"
+                        onClick={handleSignOut}
+                    >
+                        Sign Out
+                    </button>
                     </li>
                 </ul>
             </div>

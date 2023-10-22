@@ -2,16 +2,12 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { translation } from '../constants/translation/en';
-import { UserAuth } from '../context/AuthContext';
+import { googleSignIn, logOut, emailAndPasswordSignIn, handleCreateAccountForm } from '../firebase';
+// import { UserAuth } from '../context/AuthContext';
+import { state$ } from '../utils/legendState';
 
-function Login() {
-    const {
-        googleSignIn,
-        user,
-        logOut,
-        emailAndPasswordSignIn,
-        handleCreateAccountForm,
-    } = UserAuth();
+const Login = () => {
+    const user = state$.user.get();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [displayName, setDisplayName] = useState('');
@@ -74,6 +70,7 @@ function Login() {
     const handleSignOut = () => {
         try {
             logOut();
+            navigate('/');
         } catch (e) {
             console.log(e);
         }
@@ -83,7 +80,7 @@ function Login() {
         return (
             <div className="flex flex-col min-h-full border border-gray p-10 max-w-7xl m-auto space-y-10 justify-center items-center">
                 <h2 className="text-2xl underline">
-                    Welcome {user.displayName}
+                    Welcome {user?.displayName}
                 </h2>
                 <button
                     className="border border-gray-300 rounded-md hover:border-black px-5 py-2"
