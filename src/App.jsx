@@ -19,7 +19,7 @@ import Login from './Pages/Login.jsx';
 import { Page404 } from './Pages/Page404';
 import { PrivacyPolicy } from './Pages/PrivacyPolicy';
 import { TermsOfService } from './Pages/TermsOfService';
-import { AuthContextProvider } from './Context/AuthContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
