@@ -1,10 +1,9 @@
-import { IconContext } from 'react-icons';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/formula-flag.png';
 import { translation } from '../constants/translation/en';
 import UserMenu from './UserMenu';
 import { state$ } from '../utils/legendState';
+import { SearchBar } from './SearchBar';
 
 const Header = () => {
     const iconStyles = {
@@ -20,18 +19,10 @@ const Header = () => {
                 <div className="cursor-pointer" onClick={() => navigate('/')}>
                     <img src={logo} alt="racecomp flag logo" width={128} />
                 </div>
-                <div className="flex bg-slate-200 w-full p-2 items-center mx-3 rounded-full">
-                    <IconContext.Provider value={iconStyles}>
-                        <HiMagnifyingGlass />
-                    </IconContext.Provider>
-                    <input
-                        className="overflow-ellipsis px-1 bg-transparent outline-none w-full"
-                        type="text"
-                        placeholder="Search for leagues, pilots and more!"
-                    />
-                </div>
+                <SearchBar iconStyles={iconStyles} />
+                
                 {user?.displayName ? (
-                    <UserMenu iconStyles />
+                    <UserMenu iconStyles={iconStyles} />
                 ) : (
                     <div>
                         <NavLink to="/login"> {translation.LOGIN} </NavLink>
