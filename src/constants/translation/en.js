@@ -6,11 +6,14 @@ export const translation = {
     GAME_NAME:"This league will be played on the following game",
     LEAGUES: 'Leagues',
     LEAGUE_FORM_TITLE: 'League Form',
+    LEAGUE_HUB: "League Hub",
     LEAGUE_FORM_FIELD_TITLE: 'League Title',
     LEAGUE_FORM_PLACEHOLDER: 'insert League Name',
+    LEAGUES_YOU_PARTICIPATE:'Leagues you participate',
     LOGIN: 'Login',
     LIVE: 'Live',
     NOTIFICATIONS: 'Notifications',
+    NO_LEAGUES_MESSAGE:"YOUR LEAGUES WILL BE DISPLAYED HERE",
     PRIVACY_POLICY: 'Privacy Policy',
     PROFILE: 'Profile',
     SUBMIT: 'Submit',
@@ -22,6 +25,7 @@ export const translation = {
     RACECOMP: 'RaceComp',
     TERMS_OF_USE: 'Terms of Use',
     TERMS_OF_SERVICE: 'Terms of Service',
+    YOUR_LEAGUES:"Your Leagues",
     UPCOMING_RACES: 'Upcoming Races',
     WELCOME_TO: 'welcome to ',
     PC: 'PC',
@@ -32,3 +36,4 @@ export const translation = {
     ABOUT_US: 'About us',
     CONTACT_US: 'Contact us',
 };
+

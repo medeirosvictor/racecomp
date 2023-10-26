@@ -6,6 +6,8 @@ const Section = ({ title, cardsArr }) => {
         races: translation.UPCOMING_RACES,
         leagues: translation.LEAGUES,
         lives: translation.LIVE,
+        administredLeagues: translation.YOUR_LEAGUES,
+        participantLeagues: translation.LEAGUES_YOU_PARTICIPATE
     };
 
     return (
