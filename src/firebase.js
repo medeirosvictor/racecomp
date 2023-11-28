@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from 'firebase/app';
+import { getAnalytics } from 'firebase/analytics';
 import { getAuth, updateProfile, deleteUser } from 'firebase/auth';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 import { setDoc, getDoc, getDocs, collection, doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
@@ -23,6 +23,7 @@ import { state$ } from './utils/legendState'
 const firebaseConfig = {
     apiKey: "AIzaSyARlC9opawE15cMFxi6RUfFWgs0bBH0QMw",
     authDomain: "race-comp-db.firebaseapp.com",
+    databaseURL: "https://race-comp-db-default-rtdb.firebaseio.com",
     projectId: "race-comp-db",
     storageBucket: "race-comp-db.appspot.com",
     messagingSenderId: "797743328322",
@@ -33,6 +34,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
 const db = getFirestore();
 const storage = getStorage();
 

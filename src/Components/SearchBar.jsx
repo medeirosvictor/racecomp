@@ -74,12 +74,8 @@ export const SearchBar = ({iconStyles}) => {
                         
                     }
                     </Memo>
-                </div> 
-           
-
-                    
+                </div>
             }
-
         </div>
     )
 }
