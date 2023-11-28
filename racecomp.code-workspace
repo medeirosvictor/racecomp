@@ -4,5 +4,12 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"osfdigital.wingman.workspaceIndexingSettings": {
+			"indexingState": 4,
+			"indexedWorkspaceId": "30feb14dba401d30b4262628dae0fd46a86c6e63b97b32d72deebe6dd5735deb",
+			"uploadedFiles": 56,
+			"indexingId": "65a428c28055e09cc7e76bc403ba9fe8c6aaac80faae2f6f3182bde519c3b1f9"
+		}
+	}
 }

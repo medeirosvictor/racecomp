@@ -52,6 +52,7 @@ export const searchForUsers = async (searchQuery) => {
     querySnapshot.forEach((doc) => {
         const user = doc.data();
         if (user.displayName?.toLowerCase().includes(searchQuery.toLowerCase())) {
+            console.log(user.displayName?.toLowerCase().includes(searchQuery.toLowerCase()))
             users.push(user);
         }
     });
