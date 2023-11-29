@@ -10,7 +10,7 @@ import { GoogleAuthProvider,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { removeUserFromLocalStorage } from "./utils/localStorageHelpers";
+import { getLoggedUserFromLocalStorage, removeUserFromLocalStorage } from "./utils/localStorageHelpers";
 import { state$ } from './utils/legendState'
 
 
@@ -154,6 +154,24 @@ export const handleAddUserToFirestore = async (user) => {
     console.log("handleAddUserToFirestore: ", auth.currentUser);
     // addLoggedUserToLocalStorage(payload);
     state$.user.set(payload);
+}
+
+
+export const handleAddLeagueToFirestore = async (leagueFormData) => {
+    const {selectedPlatforms,pilots,races,title,game,startDate} = leagueFormData;
+    const user = getLoggedUserFromLocalStorage();
+    const userRef = doc(collection(db, "Users"), user?.uid)
+
+    const payload = {
+        leagueName : title,
+        ownerUid: user?.uid,
+        platform: [...selectedPlatforms],
+        startDate,
+        pilots: [ userRef ],
+        game,
+    };
+
+    await setDoc(doc(collection(db, "Leagues")), payload);
 }
 
 export const googleSignIn = async () => {

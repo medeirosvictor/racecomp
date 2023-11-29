@@ -3,7 +3,8 @@ const initialState = {
     title:"",
     startDate:"",
     game:"",
-    selectedPlatforms:[]
+    selectedPlatforms:[],
+    pilots:[],
   }
 
 const useLeagueCreationForm =()=>{
