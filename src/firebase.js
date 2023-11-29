@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth, updateProfile, deleteUser } from 'firebase/auth';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
-import { setDoc, getDoc, getDocs, collection, doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
+import { setDoc, getDoc ,getDocs, collection, doc, getFirestore, updateDoc, deleteDoc, query, where  } from "@firebase/firestore";
 import { GoogleAuthProvider,
     signOut,
     signInWithPopup,
@@ -12,6 +12,7 @@ import { GoogleAuthProvider,
 } from "firebase/auth";
 import { getLoggedUserFromLocalStorage, removeUserFromLocalStorage } from "./utils/localStorageHelpers";
 import { state$ } from './utils/legendState'
+import { fromLeaguesService } from "./utils/fireBaseUtil";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -165,13 +166,29 @@ export const handleAddLeagueToFirestore = async (leagueFormData) => {
     const payload = {
         leagueName : title,
         ownerUid: user?.uid,
-        platform: [...selectedPlatforms],
         startDate,
-        pilots: [ userRef ],
         game,
+        platform: [...selectedPlatforms],
+        pilots: [ ...pilots,userRef ],
+        races,
     };
 
     await setDoc(doc(collection(db, "Leagues")), payload);
+}
+
+export const getOwnedLeagues  = async () =>{
+    var ownedLeagues =[];
+    const loggedUserId = getLoggedUserFromLocalStorage()?.uid;
+
+    // Create a reference to the cities collection
+    const leaguesRef = collection(db, "Leagues");
+
+    // Create a query against the collection.
+    const q = query(leaguesRef, where("ownerUid", "==", loggedUserId));
+    const ownedLeaguesQuery = await getDocs(q);
+    ownedLeaguesQuery.forEach( league => ownedLeagues.push(fromLeaguesService(league)));
+
+    return ownedLeagues;
 }
 
 export const googleSignIn = async () => {
