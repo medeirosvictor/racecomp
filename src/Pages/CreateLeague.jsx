@@ -1,6 +1,7 @@
 import Form from '../Components/Form';
 import FormField from '../Components/FormField';
 import { translation } from '../constants/translation/en';
+import { handleAddLeagueToFirestore } from '../firebase';
 import useLeagueCreationForm from '../hooks/useLeagueCreationForm';
 import { platformLabels } from '../constants/platformConstants';
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +10,11 @@ const CreateLeague = () => {
     const { leagueData, handleSetTitleValue, handleSetSelectedPlatforms, handleSetLeagueGame } = useLeagueCreationForm();
     const navigate = useNavigate();
 
-
     return (
         <div className="flex justify-center content-center items-center px-10  w-screen h-screen">
             <Form
                 handleCancel={() => navigate("/")}
-                handleSubmit={() => navigate("/leagues")}
+                handleSubmit={() =>  handleAddLeagueToFirestore(leagueData) }
                 styles={"backdrop-blur-md backdrop-grayscale-1 bg-white/30 p-2 shadow-2xl rounded-lg"} title={"League Creation Form"}
             >
                 <FormField
