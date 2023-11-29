@@ -1,8 +1,8 @@
 import { translation } from "./translation/en";
 
-export const playstationId ="itSucks";
-export const xboxId ="wannaBePc";
-export const pcId ="pcMasterRace";
+export const playstationId ="playstation";
+export const xboxId ="xbox";
+export const pcId ="pc";
 
 
 export const platformLabels = [
