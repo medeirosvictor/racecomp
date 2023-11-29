@@ -4,7 +4,7 @@ import { translation } from "../constants/translation/en"
  const  Form = ({ title, handleCancel,handleSubmit , styles,children}) => {
 
         return (
-            <div  className={`flex flex-col content-start flex-wrap pt-18 w-96 h-3/5 ${styles}`} >
+            <div  className={`flex flex-col content-start flex-wrap pt-18 w-96 h-{930} ${styles}`} >
                 <h2 className="text-4xl h-20">{title}</h2>
                 {children}
                 <div className="flex justify-center content-center space-x-4 items-center w-full ">
