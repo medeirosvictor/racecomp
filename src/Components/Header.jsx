@@ -15,7 +15,7 @@ const Header = () => {
 
     return (
         <header>
-            <nav className="flex items-center flex-1 p-2">
+            <nav className="flex items-center flex-1 p-2 gap-5">
                 <div className="cursor-pointer" onClick={() => navigate('/')}>
                     <img src={logo} alt="racecomp flag logo" width={128} />
                 </div>
