@@ -11,9 +11,6 @@ export const SearchBar = ({iconStyles}) => {
     const usersFound$ = tempState$.usersFound;
     const leaguesFound$ = tempState$.leaguesFound;
     const searchString$ = tempState$.searchString;
-    const [isTyping, setIsTyping] = useState(false);
-    const [searchString, setSearchString] = useState('');
-    const [searching, setSearching] = useState(false);
 
     const usersFound = useSelector(usersFound$);
     const leaguesFound = useSelector(leaguesFound$);
@@ -22,7 +19,6 @@ export const SearchBar = ({iconStyles}) => {
         const searchValue = e.target.value;
         searchString$.set(searchValue);
         if (searchString$.get().length > 1) {
-            setSearching(true);
             const [u, l] = await searchForMatchesFirebase(searchString$.get());
             if (u.length >= 1 || l.length >= 1) {
                 usersFound$.set(u);
@@ -31,7 +27,14 @@ export const SearchBar = ({iconStyles}) => {
                 console.log('Search Results: ', usersFound$.get(), leaguesFound$.get());
             }
         }
-        setSearching(false);
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Backspace' && searchString$.get().length === 0) {
+            console.log('Backspace pressed');
+            usersFound$.set([]);
+            leaguesFound$.set([]);
+        }
     }
 
     return (
@@ -45,6 +48,7 @@ export const SearchBar = ({iconStyles}) => {
                     type="text"
                     placeholder="Search for leagues, pilots and more!"
                     onChange={handleSearchBarInput}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
 
