@@ -8,7 +8,7 @@ import { platformLabels } from '../constants/platformConstants';
 import { createLeagueGameId, createLeagueTitleId } from '../constants/createLeagueConstants';
 
 const CreateLeague = () => {
-    const { leagueData,isSaveButtonDisabled, handleSetTitleValue, handleSetSelectedPlatforms, handleSetLeagueGame } = useLeagueCreationForm();
+    const { leagueData, isSaveButtonDisabled, handleSetTitleValue, handleSetSelectedPlatforms, handleSetLeagueGame } = useLeagueCreationForm();
     const navigate = useNavigate();
 
    

@@ -158,6 +158,13 @@ export const handleAddUserToFirestore = async (user) => {
 }
 
 
+export const deleteOwnedLeague = (league) => {
+    // removing from firestore
+    if(league.ownerUid === user.uid){
+
+        deleteDoc(doc(db, "Leagues", league.uid));
+    }
+}
 export const handleAddLeagueToFirestore = async (leagueFormData) => {
     const {selectedPlatforms,pilots,races,title,game,startDate} = leagueFormData;
     const user = getLoggedUserFromLocalStorage();
