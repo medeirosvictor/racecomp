@@ -12,6 +12,7 @@ export const SearchBar = ({iconStyles}) => {
     const usersFound$ = tempState$.usersFound;
     const leaguesFound$ = tempState$.leaguesFound;
     const searchString$ = tempState$.searchString;
+    const [isFocused, setIsFocused] = useState(false);
 
     const usersFound = useSelector(usersFound$);
     const leaguesFound = useSelector(leaguesFound$);
@@ -39,14 +40,15 @@ export const SearchBar = ({iconStyles}) => {
 
     return (
         <div className='md:min-w-[80%]'>
-            <div className="flex flex-wrap bg-slate-200 w-full p-2 items-center mx-3 rounded-full relative">
+            <div className={`flex flex-wrap w-full p-2 bg-[#eee] items-center mx-3 rounded-full relative`}>
                 <div className='flex w-full justify-start'>
                     <input
-                        className="overflow-ellipsis px-1 bg-transparent outline-none w-full"
+                        className={`overflow-ellipsis px-1 bg-transparent outline-none w-full `}
                         type="text"
                         placeholder="Search for leagues, pilots and more!"
                         onChange={handleSearchBarInput}
                         onKeyDown={handleKeyDown}
+
                     />
                 </div>
                 <div className={`bg-white min-h-[150px] w-full p-3 absolute top-[40px] rounded-md z-10 shadow-md ${searchString$.get().length > 1 ? '' : 'hidden'}`}>
@@ -63,7 +65,6 @@ export const SearchBar = ({iconStyles}) => {
 
             {/* MAYBE: Implementar um spinner enquanto digitando talvez */}
 
-            
         </div>
     )
 }
