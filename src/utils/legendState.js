@@ -27,6 +27,9 @@ export const state$ = observable({
 
 export const tempState$ = observable({
     userChanges: {},
+    searchString: '',
+    usersFound: [],
+    leaguesFound: []
 })
 
 persistObservable(state$, {

@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from 'firebase/app';
+import { getAnalytics } from 'firebase/analytics';
 import { getAuth, updateProfile, deleteUser } from 'firebase/auth';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
-import { setDoc, getDoc , collection, doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
+import { setDoc, getDoc, getDocs, collection, doc, getFirestore, updateDoc, deleteDoc } from "@firebase/firestore";
 import { GoogleAuthProvider,
     signOut,
     signInWithPopup,
@@ -23,6 +23,7 @@ import { state$ } from './utils/legendState'
 const firebaseConfig = {
     apiKey: "AIzaSyARlC9opawE15cMFxi6RUfFWgs0bBH0QMw",
     authDomain: "race-comp-db.firebaseapp.com",
+    databaseURL: "https://race-comp-db-default-rtdb.firebaseio.com",
     projectId: "race-comp-db",
     storageBucket: "race-comp-db.appspot.com",
     messagingSenderId: "797743328322",
@@ -33,6 +34,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
 const db = getFirestore();
 const storage = getStorage();
 
@@ -42,6 +44,36 @@ export const updateUserProfileFirestore = async (user, data) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const searchForUsers = async (searchQuery) => {
+    const querySnapshot = await getDocs(collection(db, "Users"));
+    const users = [];
+    querySnapshot.forEach((doc) => {
+        const user = doc.data();
+        if (user.displayName?.toLowerCase().includes(searchQuery.toLowerCase())) {
+            users.push(user);
+        }
+    });
+    return users;
+}
+
+export const searchForLeagues = async (searchQuery) => {
+    const querySnapshot = await getDocs(collection(db, "Leagues"));
+    const leagues = [];
+    querySnapshot.forEach((doc) => {
+        const league = doc.data();
+        if (league.name?.toLowerCase().includes(searchQuery.toLowerCase())) {
+            leagues.push(league);
+        }
+    });
+    return leagues;
+}
+
+export const searchForMatchesFirebase = async (searchQuery) => {
+    const usersFound = await searchForUsers(searchQuery);
+    const leaguesFound = await searchForLeagues(searchQuery);
+    return [usersFound, leaguesFound];
 }
 
 export const deleteCurrentUser = (user) => {
