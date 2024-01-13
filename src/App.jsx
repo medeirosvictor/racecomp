@@ -20,6 +20,7 @@ import { Page404 } from './Pages/Page404';
 import { PrivacyPolicy } from './Pages/PrivacyPolicy';
 import { TermsOfService } from './Pages/TermsOfService';
 import { AuthContextProvider } from './context/AuthContext';
+import PublicProfile from './Pages/PublicProfile.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +41,7 @@ const router = createBrowserRouter(
       <Route path="about-us" element={<AboutUs />} />
       <Route path="privacy-policy" element={<PrivacyPolicy />} />
       <Route path="terms-of-service" element={<TermsOfService />} />
+      <Route path={`profile/:uid`} element={<PublicProfile />} />
       <Route path="*" element={<Page404 />} />
     </Route>
   )
