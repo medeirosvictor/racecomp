@@ -169,18 +169,24 @@ export const handleAddLeagueToFirestore = async (leagueFormData) => {
     const {selectedPlatforms,pilots,races,title,game,startDate} = leagueFormData;
     const user = getLoggedUserFromLocalStorage();
     const userRef = doc(collection(db, "Users"), user?.uid)
+    const newLeagueRef = doc(collection(db, "Leagues"));
 
-    const payload = {
-        leagueName : title,
-        ownerUid: user?.uid,
-        startDate,
-        game,
-        platform: [...selectedPlatforms],
-        pilots: [ ...pilots,userRef ],
-        races,
-    };
+    if(newLeagueRef){
+        const payload = {
+            leagueName : title,
+            ownerUid: user?.uid,
+            startDate,
+            game,
+            platform: [...selectedPlatforms],
+            pilots: [ ...pilots,userRef ],
+            races: races || [],
+            uid:newLeagueRef.id,
+        };
+        
+        await setDoc(newLeagueRef, payload);
+    }
 
-    await setDoc(doc(collection(db, "Leagues")), payload);
+    
 }
 
 export const getOwnedLeagues  = async () =>{
