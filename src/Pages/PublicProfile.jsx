@@ -1,8 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getUserById } from '../firebase';
+import { tempState$ } from '../utils/legendState';
 
-export default function PublicProfile({user}) {
+import {
+    useParams
+  } from 'react-router-dom';
+import { useSelector } from '@legendapp/state/react';
+
+export default function PublicProfile() {
+    let urlParams = useParams();
+    const useruid = urlParams.useruid;
+    console.log(urlParams)
+    const user$ = tempState$.publicUserProfile
+    const user = useSelector(user$);
+
+    useEffect(() => {
+
+        const fetchData = async() => {
+
+            try {
+                user$.set(getUserById(useruid))
+                console.log(user)
+            } catch(err) {
+                console.error(err);
+            }
+        };
+
+        fetchData();
+
+    }, []);
+
   return (
     <>
+    {user?.displayName ? 
     <div className='flex flex-col min-h-full p-5 max-w-7xl m-auto space-y-10'>
         <div className='flex flex-col items-center justify-start lg:space-x-7 space-y-7 lg:flex-row lg:justify-center'>
             <div className='flex flex-col items-center justify-center space-y-7'>
@@ -82,6 +112,7 @@ export default function PublicProfile({user}) {
             </div>
         </div>
     </div>
+: <div>dale</div>}
 </>
   )
 }

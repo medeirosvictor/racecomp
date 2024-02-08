@@ -117,6 +117,16 @@ export const emailAndPasswordSignIn = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password);
 }
 
+export const getUserById = async (user) => {
+    const docRef = doc(db, 'Users', user?.uid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+        return docSnap.data();
+    } else {
+        return null;
+    }
+}
+
 export const getUserFromFirestore = async (user, db) => {
     const docRef = doc(db, 'Users', user?.uid);
     const docSnap = await getDoc(docRef);
